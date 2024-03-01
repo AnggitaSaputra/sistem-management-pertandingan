@@ -21,14 +21,14 @@ Route::middleware(['guest'])->group(function () {
         Route::match(['get', 'post'], '/', 'index')->name('login');
         Route::match(['get', 'post'], '/register', 'register')->name('register');
     });
-    Route::controller(DashboardController::class)->group(function () {
-        Route::get('/logout', 'logout')->name('logout');
-    });
 });
 Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function() {
             Route::get('/', 'index')->name('dashboard');
+        });
+        Route::controller(AuthController::class)->group(function () {
+            Route::get('/logout', 'Logout')->name('logout');
         });
     });
 });

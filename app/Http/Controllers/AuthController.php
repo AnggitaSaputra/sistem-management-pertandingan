@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    private function jsonResponse(bool $success, string $message, int $statusCode = 200)
+    {
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ], $statusCode);
+    }
+    
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -41,5 +49,12 @@ class AuthController extends Controller
             'title' => 'Register'
         ];
         return view('page.auth.register', compact('data'));
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return $this->jsonResponse(true, 'Logout successful', 200);
     }
 }

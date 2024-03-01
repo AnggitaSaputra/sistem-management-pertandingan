@@ -14,9 +14,4 @@ class DashboardController extends Controller
         ];
         return view('page.dashboard.index', compact('data'));
     }
-    public function logout()
-    {
-        Auth::logout();
-        response()->json(['success'=> true, 'message' => 'berhasil logout'], 200);
-    }
 }
