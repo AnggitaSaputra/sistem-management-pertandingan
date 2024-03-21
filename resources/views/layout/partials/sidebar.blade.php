@@ -67,7 +67,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-3 h-3 ml-auto">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>
-                  
+                
             </a>
             <ul class="hidden text-gray-600 pt-1 w-48 rounded-lg" id="dropdown-example">
                 <li><a href="{{ route('profile', Auth::user()->id) }}" class="hover:bg-gray-300 py-2 px-4 block whitespace-no-wrap">Profile</a></li>
