@@ -18,6 +18,10 @@ class UserController extends Controller
     public function index(Request $request) 
     {
         if ($request->ajax()) {
+            if ($request->isMethod('get')) {
+                return response()->json(User::all());
+            }
+
             User::create([
                 'nama' => $request->nama,
                 'email' => $request->email,
@@ -31,7 +35,7 @@ class UserController extends Controller
         $data = [
             'title' => 'Data User'
         ];
-        return view('', compact('data'));
+        return view('page.dashboard.user', compact('data'));
     }
 
     public function update(Request $request, $id)

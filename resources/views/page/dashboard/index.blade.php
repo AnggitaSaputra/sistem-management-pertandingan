@@ -2,8 +2,8 @@
 
 @section('content')
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <a href="#" class="block max-w-lg p-6 bg-[#7BD3EA] text-gray-900 border border-black shadow-xl rounded-lg">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 text-gray-600">
+    <a href="#" class="block max-w-lg p-6 bg-[#7BD3EA] shadow-xl rounded-lg">
         <div class="flex justify-between">
             <h5 class="mb-2 text-2xl font-bold tracking-tight ">User</h5>
             <svg class="w-12 h-12 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -12,7 +12,7 @@
         </div>
         <p class="font-bold text-2xl ">{{ $data['user'] }}</p>
     </a>  
-    <a href="#" class="block max-w-lg p-6 bg-[#A1EEBD] text-gray-900 border border-black shadow-xl rounded-lg">
+    <a href="#" class="block max-w-lg p-6 bg-[#A1EEBD] shadow-xl rounded-lg">
         <div class="flex justify-between">
             <h5 class="mb-2 text-2xl font-bold tracking-tight ">Tim</h5>
             <svg class="w-12 h-12 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -21,7 +21,7 @@
         </div>
         <p class="font-bold text-2xl ">{{ $data['tim'] }}</p>
     </a>  
-    <a href="#" class="block max-w-lg p-6 bg-[#F6F7C4] text-gray-900 border border-black shadow-xl rounded-lg">
+    <a href="#" class="block max-w-lg p-6 bg-[#F6F7C4] shadow-xl rounded-lg">
         <div class="flex justify-between">
             <h5 class="mb-2 text-2xl font-bold tracking-tight ">Atlit</h5>
             <svg class="w-12 h-12 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

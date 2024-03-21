@@ -69,7 +69,7 @@ class DashboardController extends Controller
         }
 
         $data = [
-            'title' => 'Change Password',
+            'title' => 'Ganti Password',
         ];
 
         return view('page.dashboard.changepassword', compact('data'));

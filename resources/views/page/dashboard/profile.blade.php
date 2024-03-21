@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="shadow-lg p-5 rounded-lg">
+<div class="shadow-lg p-5 rounded-lg bg-white">
     <form id="profileForm">
         @csrf
         <div class="mb-6">
