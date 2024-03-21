@@ -11,11 +11,11 @@
 </head>
 <body>
     <div class="flex h-screen">
-        <div class="bg-white w-[250px] flex flex-col border-r-2 shadow-lg">
+        <div class="bg-white w-[250px] flex flex-col border-r-[1px] border-black shadow-lg">
             @include('layout.partials.sidebar')
         </div>
         <div class="flex-1">
-            <div class="shadow-lg border-b-2 p-5 flex justify-between">
+            <div class="shadow-lg border-b-[1px] border-black p-5 flex justify-between">
                 @include('layout.partials.navbar')
             </div>
             <div class="bg-white p-8">
