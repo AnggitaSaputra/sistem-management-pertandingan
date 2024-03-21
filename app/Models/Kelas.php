@@ -9,4 +9,9 @@ class Kelas extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    
+    public function kategori() 
+    {
+        return $this->belongsTo(Kategori::class, 'kategori', 'id');
+    }
 }

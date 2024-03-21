@@ -22,44 +22,29 @@
                 </button>
             </div>
         </div>
-        <div id="userModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
+        <div id="jadwalModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div class="modal-content bg-white w-1/2 p-4 rounded-lg">
                 <div class="flex justify-between">
                     <h2 class="text-xl font-bold">Tambah {{$data['title'] }}</h2>
                     <button id="closeModalButton" class="text-red-500 hover:text-red-700">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form id="formUser">
+                    <form id="formJadwal">
                         @csrf
                         <div class="mb-6">
-                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Lengkap</label>
-                            <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama Lengkap" required />
+                            <label for="nama_pertandingan" class="block mb-2 text-sm font-medium text-gray-900">Nama Pertandingan</label>
+                            <input type="text" id="nama_pertandingan" name="nama_pertandingan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama Pertandingan" required />
                             <input type="id" id="id" name="id" hidden>
                         </div> 
                         <div class="mb-6">
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email address</label>
-                            <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Email" required />
+                            <label for="waktu_mulai_pertandingan" class="block mb-2 text-sm font-medium text-gray-900">Waktu Mulai</label>
+                            <input type="date" id="waktu_mulai_pertandingan" name="waktu_mulai_pertandingan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
                         </div> 
                         <div class="mb-6">
-                            <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
-                            <select id="role" name="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option selected value="">Pilih role</option>
-                                <option value="admin">Admin</option>
-                                <option value="manager">Manager</option>
-                                <option value="official">Official</option>
-                            </select>
+                            <label for="waktu_akhir_pertandingan" class="block mb-2 text-sm font-medium text-gray-900">Waktu Akhir</label>
+                            <input type="date" id="waktu_akhir_pertandingan" name="waktu_akhir_pertandingan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
                         </div> 
-                        <div id="passwordSection">
-                            <div class="mb-6">
-                                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                                <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••"/>
-                            </div> 
-                            <div class="mb-6">
-                                <label for="confirm_password" class="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
-                                <input type="password" id="confirm_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••"/>
-                            </div> 
-                        </div>
-                        <button type="button" onclick="saveUser()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+                        <button type="button" onclick="saveJadwal()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
                     </form>
                 </div>
             </div>
@@ -71,13 +56,13 @@
                         No
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Nama Lengkap
+                        Nama Pertandingan
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Email
+                        Waktu Mulai Pertandingan
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Role
+                        Waktu Akhir Pertandingan
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Dibuat
@@ -120,7 +105,7 @@
     function fetchData() {
         const searchQuery = $('#search').val();
         $.ajax({
-            url: '{{ route('user')}}',
+            url: '{{ route('jadwal')}}',
             type: 'GET',
             data: {
                 page: currentPage,
@@ -133,7 +118,7 @@
                 updatePagination(response);
             },
             error: function(error) {
-                console.error('Error getting user data:', error.responseText);
+                console.error('Error getting jadwal data:', error.responseText);
             }
         });
     }
@@ -184,7 +169,7 @@
 
     function populateTable(response) {
         if (!response) {
-            console.error('Invalid response format or missing user data.');
+            console.error('Invalid response format or missing jadwal data.');
             return;
         }
 
@@ -196,51 +181,62 @@
             return;
         }
 
-        response.forEach(function(user, index) {
-            var created_at = user.created_at;
+        response.forEach(function(jadwal, index) {
+            var created_at = jadwal.created_at;
             var date = new Date(created_at);
             var options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
             var formattedDate = date.toLocaleString('id-ID', options);
             
             var row = $('<tr>').addClass('bg-white border-b');
             row.append($('<td>').addClass('px-6 py-4').text(index + 1));
-            row.append($('<td>').addClass('px-6 py-4').text(user.nama));
-            row.append($('<td>').addClass('px-6 py-4').text(user.email));
-            row.append($('<td>').addClass('px-6 py-4').text(user.role));
+            row.append($('<td>').addClass('px-6 py-4').text(jadwal.nama_pertandingan));
+            row.append($('<td>').addClass('px-6 py-4').text(jadwal.waktu_mulai_pertandingan));
+            row.append($('<td>').addClass('px-6 py-4').text(jadwal.waktu_akhir_pertandingan));
             row.append($('<td>').addClass('px-6 py-4').text(formattedDate));  
             var editButton = $('<button>')
                 .addClass('font-medium text-blue-600 hover:underline edit-button mr-2')
                 .text('Edit')
-                .attr('id', 'editButton_' + user.id)
+                .attr('id', 'editButton_' + jadwal.id)
                 .click(function() {
-                    editUser(user.id);
+                    editJadwal(jadwal.id);
                 });
             
             var deleteButton = $('<button>')
                 .addClass('font-medium text-red-600 hover:underline delete-button')
                 .text('Delete')
-                .attr('id', 'deleteButton_' + user.id)
+                .attr('id', 'deleteButton_' + jadwal.id)
                 .click(function() {
-                    deleteUser(user.id);
+                    deleteJadwal(jadwal.id);
                 });
             
-            row.append($('<td>').addClass('px-6 py-4').append(editButton).append(deleteButton));
+            var indexListTimButton = $('<button>')
+                .addClass('font-medium text-cyan-300 hover:underline indexListTim-button')
+                .text('List Tim')
+                .attr('id', 'indexListTimButton_' + jadwal.id)
+                .click(function() {
+                    indexListTim(jadwal.id);
+                });
+
+            row.append($('<td>').addClass('px-6 py-4').append(editButton).append(deleteButton).append(indexListTimButton));
 
             tableBody.append(row);
         });
     }
 
-    function editUser(id) {
+    function indexListTim(id) {
+        var redirectUrl = `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/${id}`;
+        window.location.href = redirectUrl;
+    }
+
+    function editJadwal(id) {
         $.ajax({
-            url: `http://127.0.0.1:8000/user/update/${id}`,
+            url: `http://127.0.0.1:8000/jadwal/pertandingan/update/${id}`,
             type: 'GET',
             success: function(response) {
                 $('#id').val(response.id);
-                $('#nama').val(response.nama);
-                $('#email').val(response.email);
-                $('#role').val(response.role);
-
-                $('#passwordSection').hide();
+                $('#nama_pertandingan').val(response.nama_pertandingan);
+                $('#waktu_mulai_pertandingan').val(response.waktu_mulai_pertandingan);
+                $('#waktu_akhir_pertandingan').val(response.waktu_akhir_pertandingan);
                 toggleModal();
             },
             error: function(error) {
@@ -249,10 +245,10 @@
         });
     }
 
-    function deleteUser(id) {
-        if (confirm('Apakah anda yakin ingin menghapus user ini?')) {
+    function deleteJadwal(id) {
+        if (confirm('Apakah anda yakin ingin menghapus jadwal ini?')) {
             $.ajax({
-                url: `http://127.0.0.1:8000/user/delete/${id}`,
+                url: `http://127.0.0.1:8000/jadwal/pertandingan/delete/${id}`,
                 type: 'GET',
                 success: function(response) {
                     alert(response);
@@ -265,10 +261,10 @@
         }
     }
 
-    function saveUser() {
-        const formData = new FormData(document.getElementById("formUser"));
+    function saveJadwal() {
+        const formData = new FormData(document.getElementById("formJadwal"));
         const id = $('#id').val();
-        const url = id ? `http://127.0.0.1:8000/user/update/${id}` : '{{ route('user') }}';
+        const url = id ? `http://127.0.0.1:8000/jadwal/pertandingan/update/${id}` : '{{ route('jadwal') }}';
 
         const ajaxSettings = {
             url: url,
@@ -280,7 +276,7 @@
                 alert(response);
                 fetchData();
                 closeModal();
-                $('#formUser')[0].reset();
+                $('#formJadwal')[0].reset();
                 $('#passwordSection').show();
             },
             error: function(error) {
@@ -292,19 +288,19 @@
     }
 
     function toggleModal() {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("jadwalModal");
         modal.classList.toggle("hidden");
     }
 
     function closeModal() {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("jadwalModal");
         modal.classList.add("hidden");
     }
 
     document.getElementById("openModalButton").addEventListener("click", toggleModal);
     document.getElementById("closeModalButton").addEventListener("click", closeModal);
     window.addEventListener("click", function(event) {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("jadwalModal");
         if (event.target == modal) {
             closeModal();
         }

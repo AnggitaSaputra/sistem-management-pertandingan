@@ -22,44 +22,56 @@
                 </button>
             </div>
         </div>
-        <div id="userModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
+        <div id="timModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div class="modal-content bg-white w-1/2 p-4 rounded-lg">
                 <div class="flex justify-between">
                     <h2 class="text-xl font-bold">Tambah {{$data['title'] }}</h2>
                     <button id="closeModalButton" class="text-red-500 hover:text-red-700">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form id="formUser">
+                    <form id="formTim" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-6">
-                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Lengkap</label>
-                            <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama Lengkap" required />
+                            <label for="nama_tim" class="block mb-2 text-sm font-medium text-gray-900">Nama Tim Kelas</label>
+                            <input type="text" id="nama_tim" name="nama_tim" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama Tim Kelas" required />
                             <input type="id" id="id" name="id" hidden>
                         </div> 
                         <div class="mb-6">
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email address</label>
+                            <label for="asal_institusi" class="block mb-2 text-sm font-medium text-gray-900">Asal Institusi</label>
+                            <input type="text" id="asal_institusi" name="asal_institusi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Asal Institusi" required />
+                        </div> 
+                        <div class="mb-6">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
                             <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Email" required />
                         </div> 
                         <div class="mb-6">
-                            <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
-                            <select id="role" name="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option selected value="">Pilih role</option>
-                                <option value="admin">Admin</option>
-                                <option value="manager">Manager</option>
-                                <option value="official">Official</option>
+                            <label for="alamat" class="block mb-2 text-sm font-medium text-gray-900">Alamat Institusi</label>
+                            <textarea type="text" id="alamat" name="alamat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Alamat" required>Alamat</textarea>
+                        </div> 
+                        <div class="mb-6">
+                            <label for="manager" class="block mb-2 text-sm font-medium text-gray-900">Manager</label>
+                            <select id="manager" name="manager" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option selected value="">Pilih manager</option>
+                                @foreach($data['user'] as $user)
+                                <option value="{{ $user->id }}">{{ $user->nama }}</option>
+                                @endforeach
                             </select>
                         </div> 
-                        <div id="passwordSection">
-                            <div class="mb-6">
-                                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                                <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••"/>
-                            </div> 
-                            <div class="mb-6">
-                                <label for="confirm_password" class="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
-                                <input type="password" id="confirm_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••"/>
-                            </div> 
-                        </div>
-                        <button type="button" onclick="saveUser()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+                        <div class="mb-6">
+                            <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900">Nomor HP</label>
+                            <input type="number" id="no_hp" name="no_hp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="6821XXXXX" required />
+                        </div> 
+                        <div class="mb-6">
+                            <label for="foto_" class="block mb-2 text-sm font-medium text-gray-900">Foto Tim</label>
+                            <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-artikelnter bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="foto_tim" id="foto_tim" type="file" required>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="foto_tim">.PNG , .JPG, .JPEG</p>
+                        </div> 
+                        <div class="mb-6">
+                            <label for="foto_" class="block mb-2 text-sm font-medium text-gray-900">Surat Tugas</label>
+                            <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-artikelnter bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="surat_tugas" id="surat_tugas" type="file" required>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="surat_tugas">.DOCX , .PDF</p>
+                        </div> 
+                        <button type="button" onclick="saveTim()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
                     </form>
                 </div>
             </div>
@@ -71,13 +83,28 @@
                         No
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Nama Lengkap
+                        Nama Tim
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Asal Institusi
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Email
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Role
+                        Alamat
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Manager
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Nomor HP
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Foto Tim
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Surat Tugas
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Dibuat
@@ -120,7 +147,7 @@
     function fetchData() {
         const searchQuery = $('#search').val();
         $.ajax({
-            url: '{{ route('user')}}',
+            url: '{{ route('tim')}}',
             type: 'GET',
             data: {
                 page: currentPage,
@@ -133,7 +160,7 @@
                 updatePagination(response);
             },
             error: function(error) {
-                console.error('Error getting user data:', error.responseText);
+                console.error('Error getting tim data:', error.responseText);
             }
         });
     }
@@ -184,7 +211,7 @@
 
     function populateTable(response) {
         if (!response) {
-            console.error('Invalid response format or missing user data.');
+            console.error('Invalid response format or missing tim data.');
             return;
         }
 
@@ -196,51 +223,71 @@
             return;
         }
 
-        response.forEach(function(user, index) {
-            var created_at = user.created_at;
+        response.forEach(function(tim, index) {
+            var created_at = tim.created_at;
             var date = new Date(created_at);
             var options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
             var formattedDate = date.toLocaleString('id-ID', options);
             
             var row = $('<tr>').addClass('bg-white border-b');
             row.append($('<td>').addClass('px-6 py-4').text(index + 1));
-            row.append($('<td>').addClass('px-6 py-4').text(user.nama));
-            row.append($('<td>').addClass('px-6 py-4').text(user.email));
-            row.append($('<td>').addClass('px-6 py-4').text(user.role));
+            row.append($('<td>').addClass('px-6 py-4').text(tim.nama_tim));
+            row.append($('<td>').addClass('px-6 py-4').text(tim.asal_institusi));
+            row.append($('<td>').addClass('px-6 py-4').text(tim.email));
+            row.append($('<td>').addClass('px-6 py-4').text(tim.alamat));    
+            row.append($('<td>').addClass('px-6 py-4').text(tim.user.nama));
+            row.append($('<td>').addClass('px-6 py-4').text(tim.no_hp));
+            row.append($('<td>').addClass('px-6 py-4').text(tim.foto_tim));
+            row.append($('<td>').addClass('px-6 py-4').text(tim.surat_tugas));
             row.append($('<td>').addClass('px-6 py-4').text(formattedDate));  
             var editButton = $('<button>')
                 .addClass('font-medium text-blue-600 hover:underline edit-button mr-2')
                 .text('Edit')
-                .attr('id', 'editButton_' + user.id)
+                .attr('id', 'editButton_' + tim.id)
                 .click(function() {
-                    editUser(user.id);
+                    editTim(tim.id);
                 });
             
             var deleteButton = $('<button>')
-                .addClass('font-medium text-red-600 hover:underline delete-button')
+                .addClass('font-medium text-red-600 hover:underline delete-button mr-2')
                 .text('Delete')
-                .attr('id', 'deleteButton_' + user.id)
+                .attr('id', 'deleteButton_' + tim.id)
                 .click(function() {
-                    deleteUser(user.id);
+                    deleteTim(tim.id);
                 });
             
-            row.append($('<td>').addClass('px-6 py-4').append(editButton).append(deleteButton));
+            var indexListAtletButton = $('<button>')
+                .addClass('font-medium text-cyan-300 hover:underline indexListAtlet-button')
+                .text('List Atlet & Official')
+                .attr('id', 'indexListAtletButton_' + tim.id)
+                .click(function() {
+                    indexListAtlet(tim.id);
+                });
+
+            row.append($('<td>').addClass('px-6 py-4').append(editButton).append(deleteButton).append(indexListAtletButton));
 
             tableBody.append(row);
         });
     }
 
-    function editUser(id) {
+    function indexListAtlet(id) {
+        var redirectUrl = `http://127.0.0.1:8000/tim/list/user/${id}`;
+        window.location.href = redirectUrl;
+    }
+
+    function editTim(id) {
         $.ajax({
-            url: `http://127.0.0.1:8000/user/update/${id}`,
+            url: `http://127.0.0.1:8000/tim/update/${id}`,
             type: 'GET',
             success: function(response) {
                 $('#id').val(response.id);
-                $('#nama').val(response.nama);
+                $('#nama_tim').val(response.nama_tim);
+                $('#asal_institusi').val(response.asal_institusi);
                 $('#email').val(response.email);
-                $('#role').val(response.role);
+                $('#alamat').val(response.alamat);
+                $('#manager').val(response.manager);
+                $('#no_hp').val(response.no_hp);
 
-                $('#passwordSection').hide();
                 toggleModal();
             },
             error: function(error) {
@@ -249,10 +296,10 @@
         });
     }
 
-    function deleteUser(id) {
-        if (confirm('Apakah anda yakin ingin menghapus user ini?')) {
+    function deleteTim(id) {
+        if (confirm('Apakah anda yakin ingin menghapus tim ini?')) {
             $.ajax({
-                url: `http://127.0.0.1:8000/user/delete/${id}`,
+                url: `http://127.0.0.1:8000/tim/delete/${id}`,
                 type: 'GET',
                 success: function(response) {
                     alert(response);
@@ -265,10 +312,10 @@
         }
     }
 
-    function saveUser() {
-        const formData = new FormData(document.getElementById("formUser"));
+    function saveTim() {
+        const formData = new FormData(document.getElementById("formTim"));
         const id = $('#id').val();
-        const url = id ? `http://127.0.0.1:8000/user/update/${id}` : '{{ route('user') }}';
+        const url = id ? `http://127.0.0.1:8000/tim/update/${id}` : '{{ route('tim') }}';
 
         const ajaxSettings = {
             url: url,
@@ -280,7 +327,7 @@
                 alert(response);
                 fetchData();
                 closeModal();
-                $('#formUser')[0].reset();
+                $('#formTim')[0].reset();
                 $('#passwordSection').show();
             },
             error: function(error) {
@@ -292,19 +339,19 @@
     }
 
     function toggleModal() {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("timModal");
         modal.classList.toggle("hidden");
     }
 
     function closeModal() {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("timModal");
         modal.classList.add("hidden");
     }
 
     document.getElementById("openModalButton").addEventListener("click", toggleModal);
     document.getElementById("closeModalButton").addEventListener("click", closeModal);
     window.addEventListener("click", function(event) {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("timModal");
         if (event.target == modal) {
             closeModal();
         }

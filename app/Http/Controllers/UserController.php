@@ -7,19 +7,22 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    private function jsonResponse($message, $data = null, $status)
-    {
-        return response()->json([
-            'message' => $message,
-            'data' => $data
-        ], $status);
-    }
-
     public function index(Request $request) 
     {
         if ($request->ajax()) {
             if ($request->isMethod('get')) {
-                return response()->json(User::all());
+                $perPage = $request->input('per_page', 10);
+                $query = User::query();
+                
+                if ($request->has('search')) {
+                    $searchTerm = $request->input('search');
+                    $query->where('nama', 'like', "%$searchTerm%")
+                          ->orWhere('email', 'like', "%$searchTerm%")
+                          ->orWhere('role', 'like', "%$searchTerm%")
+                          ->orWhere('created_at', 'like', "%$searchTerm%");
+                }
+            
+                return response()->json($query->paginate($perPage));
             }
 
             User::create([
@@ -29,7 +32,7 @@ class UserController extends Controller
                 'role' => $request->role,
             ]);
 
-            return $this->jsonResponse('Berhasil Membuat Data', '', 200);
+            return response()->json('Berhasil Membuat Data');
         }
 
         $data = [
@@ -42,24 +45,24 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             if (!User::find($id)) {
-                return $this->jsonResponse('User not found.', '', 404);
+                return response()->json('User not found.');
             }
     
             if ($request->isMethod('get')) {
-                return $this->jsonResponse('Success retrieve data', User::find($id), 200);
+                return response()->json(User::find($id));
             }
     
             $User = User::find($id);
-            $User->update($request->all());
+            $User->update($request->only('nama', 'email'));
 
-            return $this->jsonResponse('Berhasil update User', '', 200);
+            return response()->json('Berhasil update User');
         }
     }
 
     public function delete($id)
     {
         $data = User::findOrFail($id);
-        $data->destroy();
-        return $this->jsonResponse('Berhasil hapus User', '', 200);
+        $data->delete();
+        return response()->json('Berhasil hapus User');
     }
 }

@@ -2,24 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ListTimJadwalPertandingan;
 use App\Models\Tim;
 use App\Models\TimListUser;
+use App\Models\User;
+use App\Models\Atlet;
 use Illuminate\Http\Request;
 
 class TimController extends Controller
 {
-    private function jsonResponse($message, $data = null, $status)
+    private function handleImgUpload(Request $request)
     {
-        return response()->json([
-            'message' => $message,
-            'data' => $data
-        ], $status);
+        if ($request->hasFile('foto_tim')) {
+            $foto_tim = $request->file('foto_tim');
+            $fileName = time() . '.' . $foto_tim->getClientOriginalExtension();
+            $foto_tim->move(public_path('foto_tims'), $fileName);
+            return $fileName;
+        }
+        return null;
+    }
+
+    private function handleFileUpload(Request $request)
+    {
+        if ($request->hasFile('surat_tugas')) {
+            $surat_tugas = $request->file('surat_tugas');
+            $fileName = time() . '.' . $surat_tugas->getClientOriginalExtension();
+            $surat_tugas->move(public_path('surat_tugass'), $fileName);
+            return $fileName;
+        }
+        return null;
     }
 
     public function index(Request $request) 
     {
         if ($request->ajax()) {
+            if ($request->isMethod('get')) {
+                $perPage = $request->input('per_page', 10);
+                $query = Tim::query()->with('user');
+                
+                if ($request->has('search')) {
+                    $searchTerm = $request->input('search');
+                    $query->where('nama_tim', 'like', "%$searchTerm%")
+                          ->orWhere('asal_institusi', 'like', "%$searchTerm%")
+                          ->orWhere('email', 'like', "%$searchTerm%")
+                          ->orWhere('alamat', 'like', "%$searchTerm%")
+                          ->orWhere('manager', 'like', "%$searchTerm%")
+                          ->orWhere('no_hp', 'like', "%$searchTerm%")
+                          ->orWhere('foto_tim', 'like', "%$searchTerm%")
+                          ->orWhere('surat_tugas', 'like', "%$searchTerm%")
+                          ->orWhere('created_at', 'like', "%$searchTerm%");
+                }
+            
+                return response()->json($query->paginate($perPage));
+            }
+
+            $foto_tim = $this->handleImgUpload($request);
+            $surat_tugas = $this->handleFileUpload($request);
+
             Tim::create([
                 'nama_tim'=> $request->nama_tim,
                 'asal_institusi'=> $request->asal_institusi,
@@ -27,84 +65,140 @@ class TimController extends Controller
                 'alamat'=> $request->alamat,
                 'manager'=> $request->manager,
                 'no_hp'=> $request->no_hp,
-                'foto_tim'=> $request->foto_tim,
-                'surat_tugas'=> $request->surat_tugas,
+                'foto_tim'=> $foto_tim,
+                'surat_tugas'=> $surat_tugas,
             ]);
 
-            return $this->jsonResponse('Berhasil Membuat Data', '', 200);
+            return response()->json('Berhasil Membuat Data');
         }
 
         $data = [
-            'title' => 'Data Tim'
+            'title' => 'Data Tim',
+            'user' => User::where('role', 'manager')->get()
         ];
-        return view('', compact('data'));
+        return view('page.dashboard.tim', compact('data'));
     }
 
     public function update(Request $request, $id)
     {
         if ($request->ajax()) {
             if (!Tim::find($id)) {
-                return $this->jsonResponse('Tim not found.', '', 404);
+                return response()->json('tim not found.');
             }
     
             if ($request->isMethod('get')) {
-                return $this->jsonResponse('Success retrieve data', Tim::find($id), 200);
+                return response()->json(Tim::find($id));
             }
     
-            $Tim = Tim::find($id);
-            $Tim->update($request->all());
+            $tim = Tim::find($id);
+            $tim->update($request->only('nama_tim', 'asal_institusi', 'email', 'alamat', 'manager', 'no_hp'));
 
-            return $this->jsonResponse('Berhasil update Tim', '', 200);
+            $foto_tim = $this->handleImgUpload($request);
+            $surat_tugas = $this->handleFileUpload($request);
+            
+            if ($foto_tim !== null || $surat_tugas !== null) {
+                if ($foto_tim !== null && $surat_tugas !== null) {
+                    $tim->foto_tim = $foto_tim;
+                    $tim->surat_tugas = $surat_tugas;
+                    $tim->save();
+                } elseif ($foto_tim !== null) {
+                    $tim->foto_tim = $foto_tim;
+                    $tim->save();
+                } elseif ($surat_tugas !== null) {
+                    $tim->surat_tugas = $surat_tugas;
+                    $tim->save();
+                }
+            }            
+
+            return response()->json('Berhasil update tim');
         }
     }
 
     public function delete($id)
     {
         $data = Tim::findOrFail($id);
-        $data->destroy();
-        return $this->jsonResponse('Berhasil hapus Tim', '', 200);
+        $data->delete();
+        return response()->json('Berhasil hapus tim');
     }
 
-    public function list(Request $request) 
+    public function list(Request $request, $id) 
     {
         if ($request->ajax()) {
-            TimListUser::create([
-                'id_tim'=> $request->id_tim,
-                'id_user'=> $request->id_user,
-                'role'=> $request->role,
-            ]);
-
-            return $this->jsonResponse('Berhasil Membuat Data List Tim', '', 200);
+            if ($request->isMethod('get')) {
+                $perPage = $request->input('per_page', 10);
+                $query = TimListUser::query()->with('user', 'atlet')->where('id_tim', $id);
+                
+                if ($request->has('search')) {
+                    $searchTerm = $request->input('search');
+                    $query->where(function($query) use ($searchTerm) {
+                        $query->where('id_official', 'like', "%$searchTerm%")
+                              ->orWhere('id_atlet', 'like', "%$searchTerm%")
+                              ->orWhere('created_at', 'like', "%$searchTerm%");
+                    });
+                }
+                
+                $data = $query->paginate($perPage);
+                return response()->json($data);
+            }
+            
+            $requestData = $request->only(['id_official', 'id_atlet']);
+            $requestData['id_tim'] = $id;
+            TimListUser::create($requestData);
+    
+            return response()->json('Berhasil membuat join');
+        }
+    
+        $tim = Tim::findOrFail($id);
+        $atlets = Atlet::all();
+        $nonExistingAtlets = collect();
+        
+        foreach ($atlets as $atlet) {
+            $exists = TimListUser::where('id_atlet', $atlet->id)->exists();
+            if (!$exists) {
+                $nonExistingAtlets->push($atlet);
+            }
         }
 
+        $official = User::where('role', 'official')->get();
+        $nonExistingOfficial = collect();
+        
+        foreach ($official as $ofc) {
+            $exists = TimListUser::where('id_official', $ofc->id)->exists();
+            if (!$exists) {
+                $nonExistingOfficial->push($ofc);
+            }
+        }
+        
         $data = [
-            'title' => 'Data List Tim'
+            'title' => 'Data List ' . $tim->nama_tim,
+            'official' => $nonExistingOfficial,
+            'atlet' => $nonExistingAtlets,
         ];
-        return view('', compact('data'));
-    }
+        return view('page.dashboard.list.tim_list_atlet', compact('data'));
+    }    
 
     public function updateList(Request $request, $id)
     {
         if ($request->ajax()) {
             if (!TimListUser::find($id)) {
-                return $this->jsonResponse('Tim not found.', '', 404);
+                return response()->json('join not found.');
             }
     
             if ($request->isMethod('get')) {
-                return $this->jsonResponse('Success retrieve data', Tim::find($id), 200);
+                return response()->json(TimListUser::with('atlet', 'user')->find($id));
             }
     
-            $Tim = TimListUser::find($id);
-            $Tim->update($request->all());
+            $timListUser = TimListUser::find($id);
+            $timListUser->update($request->only('id_tim', 'id_official', 'id_atlet')); 
 
-            return $this->jsonResponse('Berhasil update Tim', '', 200);
+            return response()->json('Berhasil update join');
         }
     }
 
     public function deleteList($id)
     {
         $data = TimListUser::findOrFail($id);
-        $data->destroy();
-        return $this->jsonResponse('Berhasil hapus Tim', '', 200);
+        $data->delete();
+        return response()->json('Berhasil hapus join');
     }
 }

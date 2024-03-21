@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('manager');
             $table->string('no_hp');
-            $table->string('foto_tim');
-            $table->string('surat_tugas');
+            $table->string('foto_tim')->nullable();
+            $table->string('surat_tugas')->nullable();
             $table->timestamps();
         });
     }

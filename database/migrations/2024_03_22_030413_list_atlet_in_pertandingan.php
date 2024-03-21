@@ -11,20 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tim_list_user', function (Blueprint $table) {
+        Schema::create('list_atlet_in_pertandingan', function (Blueprint $table) {
             $table->id();
-            $table->string('id_tim');
-            $table->string('id_official')->nullable();
-            $table->string('id_atlet')->nullable();
+            $table->string('id_jadwal_pertandingan');
+            $table->string('id_atlet');
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('tim_list_user');
+        Schema::dropIfExists('list_atlet_in_pertandingan');
     }
 };

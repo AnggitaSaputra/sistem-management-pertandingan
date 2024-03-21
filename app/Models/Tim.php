@@ -11,4 +11,9 @@ class Tim extends Model
     
     protected $table = 'tim';
     protected $guarded = [];
+
+    public function user() 
+    {
+        return $this->belongsTo(User::class, 'manager', 'id');
+    }
 }

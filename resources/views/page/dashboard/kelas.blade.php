@@ -22,44 +22,34 @@
                 </button>
             </div>
         </div>
-        <div id="userModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
+        <div id="kelasModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div class="modal-content bg-white w-1/2 p-4 rounded-lg">
                 <div class="flex justify-between">
                     <h2 class="text-xl font-bold">Tambah {{$data['title'] }}</h2>
                     <button id="closeModalButton" class="text-red-500 hover:text-red-700">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form id="formUser">
+                    <form id="formKelas">
                         @csrf
                         <div class="mb-6">
-                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Lengkap</label>
-                            <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama Lengkap" required />
+                            <label for="nama_kelas" class="block mb-2 text-sm font-medium text-gray-900">Nama Kelas</label>
+                            <input type="text" id="nama_kelas" name="nama_kelas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama Kelas" required />
                             <input type="id" id="id" name="id" hidden>
                         </div> 
                         <div class="mb-6">
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email address</label>
-                            <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Email" required />
-                        </div> 
-                        <div class="mb-6">
-                            <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
-                            <select id="role" name="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option selected value="">Pilih role</option>
-                                <option value="admin">Admin</option>
-                                <option value="manager">Manager</option>
-                                <option value="official">Official</option>
+                            <label for="kategori" class="block mb-2 text-sm font-medium text-gray-900">Kategori</label>
+                            <select id="kategori" name="kategori" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option selected value="">Pilih kelas</option>
+                                @foreach($data['kategori'] as $kategori)
+                                <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                                @endforeach
                             </select>
                         </div> 
-                        <div id="passwordSection">
-                            <div class="mb-6">
-                                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                                <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••"/>
-                            </div> 
-                            <div class="mb-6">
-                                <label for="confirm_password" class="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
-                                <input type="password" id="confirm_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••"/>
-                            </div> 
-                        </div>
-                        <button type="button" onclick="saveUser()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+                        <div class="mb-6">
+                            <label for="bb" class="block mb-2 text-sm font-medium text-gray-900">Berat Badan</label>
+                            <input type="number" id="bb" name="bb" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Berat Badan" required />
+                        </div> 
+                        <button type="button" onclick="saveKelas()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
                     </form>
                 </div>
             </div>
@@ -71,13 +61,13 @@
                         No
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Nama Lengkap
+                        Nama Kelas
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Email
+                        Kategori
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Role
+                        Berat Badan
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Dibuat
@@ -120,7 +110,7 @@
     function fetchData() {
         const searchQuery = $('#search').val();
         $.ajax({
-            url: '{{ route('user')}}',
+            url: '{{ route('kelas')}}',
             type: 'GET',
             data: {
                 page: currentPage,
@@ -133,7 +123,7 @@
                 updatePagination(response);
             },
             error: function(error) {
-                console.error('Error getting user data:', error.responseText);
+                console.error('Error getting kelas data:', error.responseText);
             }
         });
     }
@@ -184,7 +174,7 @@
 
     function populateTable(response) {
         if (!response) {
-            console.error('Invalid response format or missing user data.');
+            console.error('Invalid response format or missing kelas data.');
             return;
         }
 
@@ -196,51 +186,62 @@
             return;
         }
 
-        response.forEach(function(user, index) {
-            var created_at = user.created_at;
+        response.forEach(function(kelas, index) {
+            var created_at = kelas.created_at;
             var date = new Date(created_at);
             var options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
             var formattedDate = date.toLocaleString('id-ID', options);
             
             var row = $('<tr>').addClass('bg-white border-b');
             row.append($('<td>').addClass('px-6 py-4').text(index + 1));
-            row.append($('<td>').addClass('px-6 py-4').text(user.nama));
-            row.append($('<td>').addClass('px-6 py-4').text(user.email));
-            row.append($('<td>').addClass('px-6 py-4').text(user.role));
+            row.append($('<td>').addClass('px-6 py-4').text(kelas.nama_kelas));
+            row.append($('<td>').addClass('px-6 py-4').text(kelas.kategori.nama_kategori));
+            row.append($('<td>').addClass('px-6 py-4').text(kelas.bb));
             row.append($('<td>').addClass('px-6 py-4').text(formattedDate));  
             var editButton = $('<button>')
                 .addClass('font-medium text-blue-600 hover:underline edit-button mr-2')
                 .text('Edit')
-                .attr('id', 'editButton_' + user.id)
+                .attr('id', 'editButton_' + kelas.id)
                 .click(function() {
-                    editUser(user.id);
+                    editKelas(kelas.id);
                 });
             
             var deleteButton = $('<button>')
-                .addClass('font-medium text-red-600 hover:underline delete-button')
+                .addClass('font-medium text-red-600 hover:underline delete-button mr-2')
                 .text('Delete')
-                .attr('id', 'deleteButton_' + user.id)
+                .attr('id', 'deleteButton_' + kelas.id)
                 .click(function() {
-                    deleteUser(user.id);
+                    deleteKelas(kelas.id);
                 });
             
-            row.append($('<td>').addClass('px-6 py-4').append(editButton).append(deleteButton));
+            var indexListAtletButton = $('<button>')
+                .addClass('font-medium text-cyan-300 hover:underline indexListAtlet-button')
+                .text('List Atlet')
+                .attr('id', 'indexListAtletButton_' + kelas.id)
+                .click(function() {
+                    indexListAtlet(kelas.id);
+                });
+
+            row.append($('<td>').addClass('px-6 py-4').append(editButton).append(deleteButton).append(indexListAtletButton));
 
             tableBody.append(row);
         });
     }
 
-    function editUser(id) {
+    function indexListAtlet(id) {
+        var redirectUrl = `http://127.0.0.1:8000/kelas/list/user/${id}`;
+        window.location.href = redirectUrl;
+    }
+
+    function editKelas(id) {
         $.ajax({
-            url: `http://127.0.0.1:8000/user/update/${id}`,
+            url: `http://127.0.0.1:8000/kelas/update/${id}`,
             type: 'GET',
             success: function(response) {
                 $('#id').val(response.id);
-                $('#nama').val(response.nama);
-                $('#email').val(response.email);
-                $('#role').val(response.role);
-
-                $('#passwordSection').hide();
+                $('#nama_kelas').val(response.nama_kelas);
+                $('#kategori').val(response.kategori.id);
+                $('#bb').val(response.bb);
                 toggleModal();
             },
             error: function(error) {
@@ -249,10 +250,10 @@
         });
     }
 
-    function deleteUser(id) {
-        if (confirm('Apakah anda yakin ingin menghapus user ini?')) {
+    function deleteKelas(id) {
+        if (confirm('Apakah anda yakin ingin menghapus kelas ini?')) {
             $.ajax({
-                url: `http://127.0.0.1:8000/user/delete/${id}`,
+                url: `http://127.0.0.1:8000/kelas/delete/${id}`,
                 type: 'GET',
                 success: function(response) {
                     alert(response);
@@ -265,10 +266,10 @@
         }
     }
 
-    function saveUser() {
-        const formData = new FormData(document.getElementById("formUser"));
+    function saveKelas() {
+        const formData = new FormData(document.getElementById("formKelas"));
         const id = $('#id').val();
-        const url = id ? `http://127.0.0.1:8000/user/update/${id}` : '{{ route('user') }}';
+        const url = id ? `http://127.0.0.1:8000/kelas/update/${id}` : '{{ route('kelas') }}';
 
         const ajaxSettings = {
             url: url,
@@ -280,7 +281,7 @@
                 alert(response);
                 fetchData();
                 closeModal();
-                $('#formUser')[0].reset();
+                $('#formKelas')[0].reset();
                 $('#passwordSection').show();
             },
             error: function(error) {
@@ -292,19 +293,19 @@
     }
 
     function toggleModal() {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("kelasModal");
         modal.classList.toggle("hidden");
     }
 
     function closeModal() {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("kelasModal");
         modal.classList.add("hidden");
     }
 
     document.getElementById("openModalButton").addEventListener("click", toggleModal);
     document.getElementById("closeModalButton").addEventListener("click", closeModal);
     window.addEventListener("click", function(event) {
-        var modal = document.getElementById("userModal");
+        var modal = document.getElementById("kelasModal");
         if (event.target == modal) {
             closeModal();
         }

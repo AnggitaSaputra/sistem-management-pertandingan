@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KelasListUser extends Model
+class ListAtletInPertandingan extends Model
 {
     use HasFactory;
 
-    protected $table = 'kelas_list_user';
+    protected $table = 'list_atlet_in_pertandingan';
     protected $guarded = [];
 
     public function atlet()
@@ -17,8 +17,8 @@ class KelasListUser extends Model
         return $this->belongsTo(Atlet::class, 'id_atlet', 'id');
     }
     
-    public function kelas()
+    public function jadwal()
     {
-        return $this->belongsTo(Kelas::class, 'id_kelas', 'id');
+        return $this->belongsTo(JadwalPertandingan::class, 'id_jadwal_pertandingan', 'id');
     }
 }

@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('tim.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('tim.delete');
             Route::prefix('list/user')->group(function() {
-                Route::match(['GET', 'POST'], '/', 'list')->name('tim.list');
+                Route::match(['GET', 'POST'], '/{id}', 'list')->name('tim.list');
                 Route::match(['GET', 'POST'], '/update/{id}', 'updateList')->name('tim.list.update');
                 Route::match(['GET'], '/delete/{id}', 'deleteList')->name('tim.list.delete');
             });
@@ -74,7 +74,7 @@ Route::middleware(['auth'])->group(function () {
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('kelas.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('kelas.delete');
             Route::prefix('list/user')->group(function() {
-                Route::match(['GET', 'POST'], '/', 'list')->name('kelas.list');
+                Route::match(['GET', 'POST'], '/{id}', 'list')->name('kelas.list');
                 Route::match(['GET', 'POST'], '/update/{id}', 'updateList')->name('kelas.list.update');
                 Route::match(['GET'], '/delete/{id}', 'deleteList')->name('kelas.list.delete');
             });
@@ -93,9 +93,14 @@ Route::middleware(['auth'])->group(function () {
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('jadwal.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('jadwal.delete');
             Route::prefix('list/tim')->group(function() {
-                Route::match(['GET', 'POST'], '/', 'list')->name('jadwalpertandingan.list');
+                Route::match(['GET', 'POST'], '/{id}', 'list')->name('jadwalpertandingan.list');
                 Route::match(['GET', 'POST'], '/update/{id}', 'updateList')->name('jadwalpertandingan.list.update');
                 Route::match(['GET'], '/delete/{id}', 'deleteList')->name('jadwalpertandingan.list.delete');
+                Route::prefix('atlet')->group(function() {
+                    Route::match(['GET', 'POST'], '/{id}', 'listAtlet')->name('jadwalpertandingan.list.atlet');
+                    Route::match(['GET', 'POST'], '/update/{id}', 'updateListAtlet')->name('jadwalpertandingan.list.update.atlet');
+                    Route::match(['GET'], '/delete/{id}', 'deleteListAtlet')->name('jadwalpertandingan.list.delete.atlet');
+                });
             });
         });
     });

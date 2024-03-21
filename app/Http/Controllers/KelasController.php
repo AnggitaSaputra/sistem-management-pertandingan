@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Atlet;
 use App\Models\Kelas;
 use App\Models\KelasListUser;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -19,85 +21,129 @@ class KelasController extends Controller
     public function index(Request $request) 
     {
         if ($request->ajax()) {
+            if ($request->isMethod('get')) {
+                $perPage = $request->input('per_page', 10);
+                $query = Kelas::query()->with('kategori');
+                
+                if ($request->has('search')) {
+                    $searchTerm = $request->input('search');
+                    $query->where('nama_kelas', 'like', "%$searchTerm%")
+                          ->orWhere('kategori', 'like', "%$searchTerm%")
+                          ->orWhere('bb', 'like', "%$searchTerm%")
+                          ->orWhere('created_at', 'like', "%$searchTerm%");
+                }
+            
+                return response()->json($query->paginate($perPage));
+            }
+
             Kelas::create([
                 'nama_kelas'=> $request->nama_kelas,
                 'kategori'=> $request->kategori,
                 'bb'=> $request->bb,
             ]);
 
-            return $this->jsonResponse('Berhasil Membuat Data', '', 200);
+            return response()->json('Berhasil Membuat Data');
         }
 
         $data = [
-            'title' => 'Data Kelas'
+            'title' => 'Data Kelas',
+            'kategori' => Kategori::all()
         ];
-        return view('', compact('data'));
+        return view('page.dashboard.kelas', compact('data'));
     }
 
     public function update(Request $request, $id)
     {
         if ($request->ajax()) {
             if (!Kelas::find($id)) {
-                return $this->jsonResponse('Kelas not found.', '', 404);
+                return response()->json('kelas not found.');
             }
     
             if ($request->isMethod('get')) {
-                return $this->jsonResponse('Success retrieve data', Kelas::find($id), 200);
+                return response()->json(Kelas::find($id));
             }
     
-            $Kelas = Kelas::find($id);
-            $Kelas->update($request->all());
+            $kelas = Kelas::find($id);
+            $kelas->update($request->only('nama_kelas', 'kategori', 'bb'));
 
-            return $this->jsonResponse('Berhasil update kelas', '', 200);
+            return response()->json('Berhasil update kelas');
         }
     }
 
     public function delete($id)
     {
         $data = Kelas::findOrFail($id);
-        $data->destroy();
-        return $this->jsonResponse('Berhasil hapus Kelas', '', 200);
+        $data->delete();
+        return response()->json('Berhasil hapus kelas');
     }
 
-    public function list(Request $request)
+    public function list(Request $request, $id)
     {
         if ($request->ajax()) {
-            KelasListUser::create([
-                'id_kelas'=> $request->id_kelas,
-                'id_user'=> $request->id_user,
-            ]);
+            if ($request->isMethod('get')) {
+                $perPage = $request->input('per_page', 10);
+                $query = KelasListUser::query()->with('kelas', 'atlet')->where('id_kelas', $id);
+                
+                if ($request->has('search')) {
+                    $searchTerm = $request->input('search');
+                    $query->where(function($query) use ($searchTerm) {
+                        $query->Where('id_atlet', 'like', "%$searchTerm%")
+                              ->orWhere('created_at', 'like', "%$searchTerm%");
+                    });
+                }
+                
+                $data = $query->paginate($perPage);
+                return response()->json($data);
+            }
 
-            return $this->jsonResponse('Berhasil Membuat Data', '', 200);
+            $requestData = $request->only(['id_atlet']);
+            $requestData['id_kelas'] = $id;
+            KelasListUser::create($requestData);
+
+            return response()->json('Berhasil Membuat Data');
+        }
+
+        $kelas = Kelas::findOrFail($id);
+
+        $atlet = Atlet::all();
+        $nonExistingAtlet = collect();
+        
+        foreach ($atlet as $atl) {
+            $exists = KelasListUser::where('id_kelas', $id)->where('id_atlet', $atl->id)->exists();
+            if (!$exists) {
+                $nonExistingAtlet->push($atl);
+            }
         }
 
         $data = [
-            'title' => 'Data Kelas List User'
+            'title' => 'Data List User Kelas ' . $kelas->nama_kelas,
+            'atlet' => $nonExistingAtlet,
         ];
-        return view('', compact('data'));
+        return view('page.dashboard.list.kelas_list_atlet', compact('data'));
     }
 
     public function updateList(Request $request, $id)
     {
         if ($request->ajax()) {
             if (!KelasListUser::find($id)) {
-                return $this->jsonResponse('Kelas list not found.', '', 404);
+                return response()->json('join not found.');
             }
     
             if ($request->isMethod('get')) {
-                return $this->jsonResponse('Success retrieve data', Kelas::find($id), 200);
+                return response()->json(KelasListUser::with('atlet')->find($id));
             }
     
-            $Kelas = KelasListUser::find($id);
-            $Kelas->update($request->all());
+            $kelasListUser = KelasListUser::find($id);
+            $kelasListUser->update($request->only('id_atlet')); 
 
-            return $this->jsonResponse('Berhasil update kelas', '', 200);
+            return response()->json('Berhasil update join');
         }
     }
 
     public function deleteList($id)
     {
         $data = KelasListUser::findOrFail($id);
-        $data->destroy();
-        return $this->jsonResponse('Berhasil hapus Kelas', '', 200);
+        $data->delete();
+        return response()->json('Berhasil hapus join');
     }
 }

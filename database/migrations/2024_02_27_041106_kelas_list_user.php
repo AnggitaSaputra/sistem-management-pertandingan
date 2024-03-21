@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('kelas_list_user', function (Blueprint $table) {
             $table->id();
             $table->string('id_kelas');
-            $table->string('id_user');
+            $table->string('id_atlet');
             $table->timestamps();
         });
     }

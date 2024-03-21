@@ -4,57 +4,60 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kategori;
-use Illuminate\Support\Facades\Redis;
 
 class KategoriController extends Controller
 {
-    private function jsonResponse($message, $data = null, $status)
+    public function index(Request $request) 
     {
-        return response()->json([
-            'message' => $message,
-            'data' => $data,
-        ], $status);
-    }
+        if ($request->ajax()) {
+            if ($request->isMethod('get')) {
+                $perPage = $request->input('per_page', 10);
+                $query = Kategori::query();
+                
+                if ($request->has('search')) {
+                    $searchTerm = $request->input('search');
+                    $query->where('nama_kategori', 'like', "%$searchTerm%")
+                          ->orWhere('created_at', 'like', "%$searchTerm%");
+                }
+            
+                return response()->json($query->paginate($perPage));
+            }
 
-    public function index(Request $request)
-    {
-        if ($request->ajax()){
             Kategori::create([
                 'nama_kategori'=> $request->nama_kategori,
             ]);
-            
-            return $this->jsonResponse('Success', '', 200);
+
+            return response()->json('Berhasil Membuat Data');
         }
-        
+
         $data = [
             'title' => 'Data Kategori'
         ];
-        return view('', compact('data'));
+        return view('page.dashboard.kategori', compact('data'));
     }
 
     public function update(Request $request, $id)
     {
         if ($request->ajax()) {
             if (!Kategori::find($id)) {
-                return $this->jsonResponse('Kategori not found', '', 404); 
+                return response()->json('kategori not found.');
             }
-            
-            if ($request->isMehtod('get')){
-                return $this->jsonResponse('Succes retieve data','', 200);
+    
+            if ($request->isMethod('get')) {
+                return response()->json(Kategori::find($id));
             }
+    
+            $kategori = Kategori::find($id);
+            $kategori->update($request->only('nama_kategori'));
 
-            $Kategori = Kategori::find($id);
-            $Kategori->update($request->all());
-
-            return $this->jsonResponse('Berhasil update data', '', 200);
+            return response()->json('Berhasil update kategori');
         }
-        
     }
 
     public function delete($id)
     {
         $data = Kategori::findOrFail($id);
-        $data->destroy();
-        return $this->jsonResponse('Berhasil hapus data', '', 200);
+        $data->delete();
+        return response()->json('Berhasil hapus kategori');
     }
 }

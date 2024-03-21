@@ -50,6 +50,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('kategori') }}" class="flex hover:bg-gray-300 py-2 px-4 whitespace-no-wrap 
+                    @if (Route::currentRouteName() == 'kategori') text-blue-700 @endif">
+                        <span class="ms-6">Data Kategori Kelas</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('jadwal') }}" class="flex hover:bg-gray-300 py-2 px-4 whitespace-no-wrap 
                     @if (Route::currentRouteName() == 'jadwal') text-blue-700 @endif">
                         <span class="ms-6">Data Jadwal</span>
