@@ -66,7 +66,7 @@
             </a>
         </li>
     </ul>
-
+    
     <ul class="absolute bottom-5 left-0 space-y-2 font-semibold w-[250px] px-4 py-4">
         <li class="relative">
             <a href="#" class="hover:text-gray-500 flex items-center p-2 rounded-lg group @if (Route::currentRouteName() == 'profile' || Route::currentRouteName() == 'change.password') text-blue-700 @endif" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
@@ -78,6 +78,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-3 h-3 ml-auto">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>
+                
             </a>
             <ul class="hidden text-gray-600 pt-1 w-48 rounded-lg" id="dropdown-example">
                 <li>
