@@ -10,21 +10,8 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-    <div class="flex h-screen">
-        <div class="bg-white w-[250px] flex flex-col border-r-2 shadow-lg">
-            @include('layout.partials.sidebar')
-        </div>
-        <div class="flex-1">
-            <div class="shadow-lg border-b-2 p-5 flex justify-between">
-                @include('layout.partials.navbar')
-            </div>
-            <div class="bg-white p-8">
-                @yield('content')
-            </div>
-            <footer class="fixed bottom-0 p-5 text-gray-400 text-sm">
-                © {{date('Y')}} {{ config('app.name') }}. All rights reserved.
-            </footer>
-        </div>
+    <div class="bg-white">
+        @yield('content')
     </div>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

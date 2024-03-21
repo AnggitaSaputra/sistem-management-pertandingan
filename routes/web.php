@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::controller(DashboardController::class)->group(function() {
             Route::get('/', 'index')->name('dashboard');
+            Route::match(['GET', 'POST'], '/profile/{id}', 'Profile')->name('profile');
+            Route::match(['GET', 'POST'], '/change-password/{id}', 'changePassword')->name('change.password');
         });
         Route::controller(AuthController::class)->group(function () {
             Route::get('/logout', 'Logout')->name('logout');

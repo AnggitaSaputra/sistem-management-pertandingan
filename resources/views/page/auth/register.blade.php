@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layout.auth')
 
 @section('content')
     <div class="flex justify-center items-center h-screen bg-gray-100">

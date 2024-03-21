@@ -25,10 +25,10 @@ class AuthController extends Controller
         } else {
             $data = [
                 'title' => 'Login'
-                ];
+            ];
             return view('page.auth.login', compact('data'));
         }
-        }
+    }
 
     public function register(Request $request)
     {
