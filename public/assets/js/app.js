@@ -17,20 +17,22 @@ function ajaxRequest(url, method, data, successCallback, errorCallback) {
         error: errorCallback
     });
 }
-function performLogout() {
-    $.ajax({
-        type: 'GET',
-        url: BASE_URL + 'logout',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                window.location.href = BASE_URL;
-            } else {
-                alert('Logout gagal')
-            }
-        },
-        error: function(error) {
-            console.log(error);
+
+async function Logout() {
+    try {
+        const response = await $.ajax({
+            type: 'GET',
+            url: BASE_URL + 'dashboard/logout',
+            dataType: 'json'
+        });
+
+        if (response.success) {
+            alert('Logout Berhasil');
+            window.location.href = BASE_URL;
+        } else {
+            throw response.message;
         }
-    });
+    } catch (error) {
+        console.error(error);
+    }
 }
