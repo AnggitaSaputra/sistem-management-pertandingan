@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,6 +41,12 @@ class AuthController extends Controller
                 'role' => $request->role
             ]);
             if ($registerUser) {
+                $data = [
+                    'type' => 'info', 
+                    'id_user' => $registerUser->id, 
+                    'message' => 'User baru telah terdaftar dengan email: '. $registerUser->email
+                ];
+                Notifikasi::createNotification($data);
                 response()->json(['message' => 'berhasil daftar'], 200);
             } else {
                 response()->json(['message' => 'Invalid credentials'], 401);

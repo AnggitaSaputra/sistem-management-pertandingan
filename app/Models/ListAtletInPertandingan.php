@@ -21,4 +21,9 @@ class ListAtletInPertandingan extends Model
     {
         return $this->belongsTo(JadwalPertandingan::class, 'id_jadwal_pertandingan', 'id');
     }
+
+    public function tim()
+    {
+        return $this->belongsTo(Tim::class, 'id_tim', 'id');
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JadwalPertandinganController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\TimController;
 use App\Http\Controllers\UserController;
@@ -58,11 +59,15 @@ Route::middleware(['auth'])->group(function () {
                 Route::match(['GET', 'POST'], '/update/{id}', 'updateList')->name('tim.list.update');
                 Route::match(['GET'], '/delete/{id}', 'deleteList')->name('tim.list.delete');
             });
-            
         });
     });
     Route::prefix('pembayaran')->group(function () {
         Route::controller(PembayaranController::class)->group(function() {
+            Route::match(['GET', 'POST'], '/manager/detail/callback/{idTeam}/{idPertandingan}', 'updatePaymentStatus')->name('pembayaran.manager.detail.callback');
+            Route::match(['GET', 'POST'], '/manager/detail/{idTeam}/{idPertandingan}', 'pembayaranManagerDetail')->name('pembayaran.manager.detail');
+            Route::match(['GET', 'POST'], '/manager', 'pembayaranManager')->name('pembayaran.manager');
+            Route::get('/get/tim/by/pertandingan', 'fetchJadwalPertandingan')->name('fetch.tim.by.pertandingan');
+            Route::match(['GET', 'POST'], '/pengaturan/harga', 'pengaturanHarga')->name('pengaturan.harga');
             Route::match(['GET', 'POST'], '/', 'index')->name('pembayaran');
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('pembayaran.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('pembayaran.delete');
@@ -89,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('jadwal/pertandingan')->group(function () {
         Route::controller(JadwalPertandinganController::class)->group(function() {
+            Route::get('get/jadwal', 'jadwal')->name('get.jadwal');
             Route::match(['GET', 'POST'], '/', 'index')->name('jadwal');
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('jadwal.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('jadwal.delete');
@@ -97,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::match(['GET', 'POST'], '/update/{id}', 'updateList')->name('jadwalpertandingan.list.update');
                 Route::match(['GET'], '/delete/{id}', 'deleteList')->name('jadwalpertandingan.list.delete');
                 Route::prefix('atlet')->group(function() {
-                    Route::match(['GET', 'POST'], '/{id}', 'listAtlet')->name('jadwalpertandingan.list.atlet');
+                    Route::match(['GET', 'POST'], '/{idTim}/{idPertandingan}', 'listAtlet')->name('jadwalpertandingan.list.atlet');
                     Route::match(['GET', 'POST'], '/update/{id}', 'updateListAtlet')->name('jadwalpertandingan.list.update.atlet');
                     Route::match(['GET'], '/delete/{id}', 'deleteListAtlet')->name('jadwalpertandingan.list.delete.atlet');
                 });
@@ -110,5 +116,8 @@ Route::middleware(['auth'])->group(function () {
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('atlet.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('atlet.delete');
         });
+    });
+    Route::controller(NotifikasiController::class)->group(function() {
+        Route::match(['GET', 'POST'], '/notifikasi', 'index')->name('notifikasi');
     });
 });

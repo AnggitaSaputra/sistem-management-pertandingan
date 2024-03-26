@@ -21,4 +21,9 @@ class TimListUser extends Model
     {
         return $this->belongsTo(Atlet::class, 'id_atlet', 'id');
     }
+
+    public function tim()
+    {
+        return $this->belongsTo(Tim::class, 'id_tim', 'id');
+    }
 }

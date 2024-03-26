@@ -53,7 +53,7 @@ class UserController extends Controller
             }
     
             $User = User::find($id);
-            $User->update($request->only('nama', 'email'));
+            $User->update($request->only('nama', 'email', 'role'));
 
             return response()->json('Berhasil update User');
         }

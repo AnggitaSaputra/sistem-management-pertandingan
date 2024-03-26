@@ -22,26 +22,33 @@
                 </button>
             </div>
         </div>
-        <div id="jadwalListTimModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
+        <div id="pembayaranModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div class="modal-content bg-white w-1/2 p-4 rounded-lg">
                 <div class="flex justify-between">
                     <h2 class="text-xl font-bold">Tambah {{$data['title'] }}</h2>
                     <button id="closeModalButton" class="text-red-500 hover:text-red-700">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form id="formJadwalListTim">
+                    <form id="formPembayaran">
                         @csrf
                         <div class="mb-6">
-                            <label class="block mb-2 text-sm font-medium text-gray-900">Tim</label>
-                            <select id="id_tim" name="id_tim" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option selected value="">Pilih Tim</option>
-                                @foreach($data['tim'] as $tim)
-                                <option value="{{ $tim->id }}">{{ $tim->nama_tim }}</option>
+                            <label for="id_pertandingan" class="block mb-2 text-sm font-medium text-gray-900">Pertandingan</label>
+                            <select id="id_pertandingan" name="id_pertandingan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option selected value="">Pilih pertandingan</option>
+                                @foreach($data['pertandingan'] as $pertandingan)
+                                <option value="{{ $pertandingan->id }}">{{ $pertandingan->nama_pertandingan }}</option>
                                 @endforeach
                             </select>
-                            <input type="id" id="id" name="id" hidden>
+                            <input type="hidden" id="id" name="id">
                         </div> 
-                        <button type="button" onclick="saveJadwalListTim()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+                        
+                        <div class="mb-6">
+                            <label for="id_tim" class="block mb-2 text-sm font-medium text-gray-900">Tim</label>
+                            <select id="id_tim" name="id_tim" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option selected value="">Pilih tim</option>
+                            </select>
+                        </div>                        
+                        <button type="button" onclick="savePembayaran()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
                     </form>
                 </div>
             </div>
@@ -53,7 +60,16 @@
                         No
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Tim
+                        Nama Pertandingan
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Nama Tim
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Total Pembayaran
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Status Pembayaran
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Dibuat
@@ -85,6 +101,31 @@
 @section('script')
 
 <script>
+    document.getElementById('id_pertandingan').addEventListener('change', function() {
+        var idPertandingan = this.value;
+        if (idPertandingan) {
+            $.ajax({
+                url: '{{ route('fetch.tim.by.pertandingan') }}', 
+                type: 'GET',
+                data: { id_pertandingan: idPertandingan },
+                success: function(response) {
+                    console.log(response)
+                    var idTimSelect = document.getElementById('id_tim');
+                    idTimSelect.innerHTML = '';
+                    var defaultOption = new Option('Pilih tim', '');
+                    idTimSelect.appendChild(defaultOption);
+                    response.forEach(function(tim) {
+                        var option = new Option(tim.tim.nama_tim, tim.tim.id);
+                        idTimSelect.appendChild(option);
+                    });
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error.responseText);
+                }
+            });
+        }
+    });
+
     let currentPage = 1;
     let totalPages = 1;
     const itemsPerPage = 10;
@@ -94,13 +135,9 @@
     });
 
     function fetchData() {
-        const currentUrl = window.location.href;
-        const urlSegments = currentUrl.split('/');
-        const lastSegment = urlSegments[urlSegments.length - 1];
-        const id = !isNaN(lastSegment) && lastSegment !== '' ? parseInt(lastSegment) : null;
         const searchQuery = $('#search').val();
         $.ajax({
-            url: `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/${id}`,
+            url: '{{ route('pembayaran')}}',
             type: 'GET',
             data: {
                 page: currentPage,
@@ -108,12 +145,12 @@
                 search: searchQuery
             },
             success: function(response) {
-                console.log(response.data)
+                console.log(response)
                 populateTable(response.data);
                 updatePagination(response);
             },
             error: function(error) {
-                console.error('Error getting jadwalListTim data:', error.responseText);
+                console.error('Error getting pembayaran data:', error.responseText);
             }
         });
     }
@@ -164,7 +201,7 @@
 
     function populateTable(response) {
         if (!response) {
-            console.error('Invalid response format or missing jadwalListTim data.');
+            console.error('Invalid response format or missing pembayaran data.');
             return;
         }
 
@@ -176,76 +213,41 @@
             return;
         }
 
-        response.forEach(function(jadwalListTim, index) {
-            var created_at = jadwalListTim.created_at;
+        response.forEach(function(pembayaran, index) {
+            var created_at = pembayaran.created_at;
             var date = new Date(created_at);
-            var options = { jadwaleZone: 'Asia/Jakarta', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            var options = { timeZone: 'Asia/Jakarta', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
             var formattedDate = date.toLocaleString('id-ID', options);
             
             var row = $('<tr>').addClass('bg-white border-b');
             row.append($('<td>').addClass('px-6 py-4').text(index + 1));
-            row.append($('<td>').addClass('px-6 py-4').text(jadwalListTim.tim.nama_tim));
+            row.append($('<td>').addClass('px-6 py-4').text(pembayaran.pertandingan.nama_pertandingan));
+            row.append($('<td>').addClass('px-6 py-4').text(pembayaran.tim.nama_tim));
+            row.append($('<td>').addClass('px-6 py-4').text(pembayaran.total_pembayaran));
+            row.append($('<td>').addClass('px-6 py-4').text(pembayaran.status_pembayaran));
             row.append($('<td>').addClass('px-6 py-4').text(formattedDate));  
-            var editButton = $('<button>')
-                .addClass('font-medium text-blue-600 hover:underline edit-button mr-2')
-                .text('Edit')
-                .attr('id', 'editButton_' + jadwalListTim.id)
-                .click(function() {
-                    editJadwalListTim(jadwalListTim.id);
-                });
-            
             var deleteButton = $('<button>')
                 .addClass('font-medium text-red-600 hover:underline delete-button mr-2')
                 .text('Delete')
-                .attr('id', 'deleteButton_' + jadwalListTim.id)
+                .attr('id', 'deleteButton_' + pembayaran.id)
                 .click(function() {
-                    deleteJadwalListTim(jadwalListTim.id);
-                });
-            
-            var indexListAtletButton = $('<button>')
-                .addClass('font-medium text-cyan-300 hover:underline indexListAtlet-button')
-                .text('List Atlet')
-                .attr('id', 'indexListAtletButton_' + jadwalListTim.tim.id)
-                .click(function() {
-                    indexListAtlet(jadwalListTim.tim.id, jadwalListTim.id_pertandingan);
+                    deletePembayaran(pembayaran.id);
                 });
 
-            row.append($('<td>').addClass('px-6 py-4').append(editButton).append(deleteButton).append(indexListAtletButton));
+            row.append($('<td>').addClass('px-6 py-4').append(deleteButton));
 
             tableBody.append(row);
         });
     }
 
-    function indexListAtlet(idTim, idPertandingan) {
-        var redirectUrl = `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/atlet/${idTim}/${idPertandingan}`;
-        window.location.href = redirectUrl;
-    }
-
-    function editJadwalListTim(id) {
-        $.ajax({
-            url: `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/update/${id}`,
-            type: 'GET',
-            success: function(response) {
-                $('#id').val(response.id);
-                $('#id_tim').append($('<option>').attr('value', response.id_tim).text(response.tim.nama_tim).prop('selected', true));
-
-                toggleModal();
-            },
-            error: function(error) {
-                console.error('Error getting data:', error.responseText);
-            }
-        });
-    }
-
-    function deleteJadwalListTim(id) {
-        if (confirm('Apakah anda yakin ingin menghapus tim ini?')) {
+    function deletePembayaran(id) {
+        if (confirm('Apakah anda yakin ingin menghapus pembayaran ini?')) {
             $.ajax({
-                url: `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/delete/${id}`,
+                url: `http://127.0.0.1:8000/pembayaran/delete/${id}`,
                 type: 'GET',
                 success: function(response) {
                     alert(response);
                     fetchData();
-                    window.location.reload();
                 },
                 error: function(error) {
                     console.error('Error getting data:', error.responseText);
@@ -254,14 +256,10 @@
         }
     }
 
-    function saveJadwalListTim() {
-        const currentUrl = window.location.href;
-        const urlSegments = currentUrl.split('/');
-        const lastSegment = urlSegments[urlSegments.length - 1];
-        const id_jadwal = !isNaN(lastSegment) && lastSegment !== '' ? parseInt(lastSegment) : null;
-        const formData = new FormData(document.getElementById("formJadwalListTim"));
+    function savePembayaran() {
+        const formData = new FormData(document.getElementById("formPembayaran"));
         const id = $('#id').val();
-        const url = id ? `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/update/${id}` : `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/${id_jadwal}`;
+        const url = id ? `http://127.0.0.1:8000/pembayaran/update/${id}` : '{{ route('pembayaran') }}';
 
         const ajaxSettings = {
             url: url,
@@ -270,10 +268,11 @@
             processData: false,
             contentType: false,
             success: function(response) {
+                console.log(response)
                 alert(response);
                 fetchData();
                 closeModal();
-                $('#formJadwalListTim')[0].reset();
+                $('#formPembayaran')[0].reset();
                 window.location.reload();
             },
             error: function(error) {
@@ -285,20 +284,19 @@
     }
 
     function toggleModal() {
-        var modal = document.getElementById("jadwalListTimModal");
+        var modal = document.getElementById("pembayaranModal");
         modal.classList.toggle("hidden");
     }
 
     function closeModal() {
-        var modal = document.getElementById("jadwalListTimModal");
+        var modal = document.getElementById("pembayaranModal");
         modal.classList.add("hidden");
-        window.location.reload();
     }
 
     document.getElementById("openModalButton").addEventListener("click", toggleModal);
     document.getElementById("closeModalButton").addEventListener("click", closeModal);
     window.addEventListener("click", function(event) {
-        var modal = document.getElementById("jadwalListTimModal");
+        var modal = document.getElementById("pembayaranModal");
         if (event.target == modal) {
             closeModal();
         }

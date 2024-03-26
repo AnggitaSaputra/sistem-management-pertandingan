@@ -11,20 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('list_atlet_in_pertandingan', function (Blueprint $table) {
+        Schema::create('notifikasi', function (Blueprint $table) {
             $table->id();
-            $table->string('id_jadwal_pertandingan');
-            $table->string('id_tim');
-            $table->string('id_atlet');
+            $table->enum('type', ['info', 'warning', 'danger']);
+            $table->string('id_user');
+            $table->string('message');
+            $table->enum('read', ['read', 'unread']);
             $table->timestamps();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('list_atlet_in_pertandingan');
+        Schema::dropIfExists('notifikasi');
     }
 };

@@ -30,6 +30,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script id="midtrans-script" type="text/javascript"
+    src="https://app.midtrans.com/snap/snap.js"
+    data-client-key="{{env('MIDTRANS_CLIENT_KEY')}}"></script>
     @yield('script')
 </body>
 </html>

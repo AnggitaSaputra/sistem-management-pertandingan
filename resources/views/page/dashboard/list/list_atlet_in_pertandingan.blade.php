@@ -36,7 +36,7 @@
                             <select id="id_atlet" name="id_atlet" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 <option selected value="">Pilih Atlet</option>
                                 @foreach($data['atlet'] as $atlet)
-                                <option value="{{ $atlet->id }}">{{ $atlet->nama }}</option>
+                                    <option value="{{ $atlet->id }}">{{ $atlet->nama }}</option>
                                 @endforeach
                             </select>
                             <input type="id" id="id" name="id" hidden>
@@ -95,12 +95,13 @@
 
     function fetchData() {
         const currentUrl = window.location.href;
-        const urlSegments = currentUrl.split('/');
-        const lastSegment = urlSegments[urlSegments.length - 1];
-        const id = !isNaN(lastSegment) && lastSegment !== '' ? parseInt(lastSegment) : null;
+        const urlSegments = currentUrl.split('/').reverse();
+        const idPertandingan = urlSegments[0];
+        const idTim = urlSegments[1];
+
         const searchQuery = $('#search').val();
         $.ajax({
-            url: `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/atlet/${id}`,
+            url: `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/atlet/${idTim}/${idPertandingan}`,
             type: 'GET',
             data: {
                 page: currentPage,
@@ -243,12 +244,12 @@
 
     function saveAtlet() {
         const currentUrl = window.location.href;
-        const urlSegments = currentUrl.split('/');
-        const lastSegment = urlSegments[urlSegments.length - 1];
-        const id_atlet = !isNaN(lastSegment) && lastSegment !== '' ? parseInt(lastSegment) : null;
+        const urlSegments = currentUrl.split('/').reverse();
+        const idPertandingan = urlSegments[0];
+        const idTim = urlSegments[1];
         const formData = new FormData(document.getElementById("formAtlet"));
         const id = $('#id').val();
-        const url = id ? `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/atlet/update/${id}` : `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/atlet/${id_atlet}`;
+        const url = id ? `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/atlet/update/${id}` : `http://127.0.0.1:8000/jadwal/pertandingan/list/tim/atlet/${idTim}/${idPertandingan}`;
 
         const ajaxSettings = {
             url: url,
