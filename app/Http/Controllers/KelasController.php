@@ -6,7 +6,9 @@ use App\Models\Atlet;
 use App\Models\Kelas;
 use App\Models\KelasListUser;
 use App\Models\Kategori;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KelasController extends Controller
 {
@@ -18,6 +20,15 @@ class KelasController extends Controller
         ], $status);
     }
     
+    public function indexManager(Request $request)
+    {
+        $data = [
+            'title' => 'myClasses',
+            'user' => User::where('role', 'manager')->get(),
+            'classes' => Kelas::with('user')->where('nama_kelas', Auth::user()->id)->first(),
+        ];
+        return view('page.dashboard.manager.myClasses', compact('data'));
+    }
     public function index(Request $request) 
     {
         if ($request->ajax()) {
@@ -28,9 +39,9 @@ class KelasController extends Controller
                 if ($request->has('search')) {
                     $searchTerm = $request->input('search');
                     $query->where('nama_kelas', 'like', "%$searchTerm%")
-                          ->orWhere('kategori', 'like', "%$searchTerm%")
-                          ->orWhere('bb', 'like', "%$searchTerm%")
-                          ->orWhere('created_at', 'like', "%$searchTerm%");
+                        ->orWhere('kategori', 'like', "%$searchTerm%")
+                        ->orWhere('bb', 'like', "%$searchTerm%")
+                        ->orWhere('created_at', 'like', "%$searchTerm%");
                 }
             
                 return response()->json($query->paginate($perPage));
@@ -88,7 +99,7 @@ class KelasController extends Controller
                     $searchTerm = $request->input('search');
                     $query->where(function($query) use ($searchTerm) {
                         $query->Where('id_atlet', 'like', "%$searchTerm%")
-                              ->orWhere('created_at', 'like', "%$searchTerm%");
+                            ->orWhere('created_at', 'like', "%$searchTerm%");
                     });
                 }
                 

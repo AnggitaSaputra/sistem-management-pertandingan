@@ -11,6 +11,7 @@ use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\TimController;
 use App\Http\Controllers\UserController;
+use App\Models\Kelas;
 use App\Models\Tim;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -51,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('tim')->group(function () {
         Route::controller(TimController::class)->group(function() {
+            Route::match(['GET', 'POST'], 'my-tim', 'indexManager')->name('my.Tim');
             Route::match(['GET', 'POST'], '/', 'index')->name('tim');
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('tim.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('tim.delete');
@@ -75,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('kelas')->group(function () {
         Route::controller(KelasController::class)->group(function() {
+            Route::match(['GET', 'POST'], 'my-classes', 'indexManager')->name('my.Classes');
             Route::match(['GET', 'POST'], '/', 'index')->name('kelas');
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('kelas.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('kelas.delete');
@@ -112,6 +115,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('atlet')->group(function () {
         Route::controller(AtletController::class)->group(function() {
+            Route::match(['GET', 'POST'], 'my-atlet', 'indexManager')->name('my.Atlet');
             Route::match(['GET', 'POST'], '/', 'index')->name('atlet');
             Route::match(['GET', 'POST'], '/update/{id}', 'update')->name('atlet.update');
             Route::match(['GET'], '/delete/{id}', 'delete')->name('atlet.delete');
@@ -120,4 +124,12 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(NotifikasiController::class)->group(function() {
         Route::match(['GET', 'POST'], '/notifikasi', 'index')->name('notifikasi');
     });
+
+    Route::get('/myTim', [TimController::class, 'show'])->name('myTim.show');
+    Route::post('/myTim', [TimController::class, 'update'])->name('myTim.update');
+    Route::post('/myTim/upload-logo', [TimController::class, 'uploadLogo'])->name('myTim.uploadLogo');
+    Route::post('/myTim/upload-surat-tugas', [TimController::class, 'uploadSuratTugas'])->name('myTim.uploadSuratTugas');
+
+    Route::get('/myClasses', [KelasController::class, 'show'])->name('myClasses.show');
+    Route::post('/myClasses', [KelasController::class, 'update'])->name('myClasses.update');
 });

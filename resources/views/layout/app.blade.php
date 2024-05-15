@@ -10,8 +10,8 @@
     @vite('resources/css/app.css')
 </head>
 <body class="bg-gray-200">
-    <div class="flex h-screen">
-        <div class="bg-white min-w-[250px] flex flex-col border-r-[1px] shadow-lg">
+    <div class="flex min-h-screen">
+        <div class="bg-white min-w-[250px] min-h-screen flex flex-col border-r-[1px] shadow-lg">
             @include('layout.partials.sidebar')
         </div>
         <div class="flex-1">
@@ -21,7 +21,7 @@
             <div class="p-8">
                 @yield('content')
             </div>
-            <footer class="fixed bottom-0 p-5 text-gray-400 text-sm">
+            <footer class="bottom-0 p-5 text-gray-400 text-sm">
                 © {{date('Y')}} {{ config('app.name') }}. All rights reserved.
             </footer>
         </div>

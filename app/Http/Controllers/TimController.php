@@ -7,6 +7,7 @@ use App\Models\TimListUser;
 use App\Models\User;
 use App\Models\Atlet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TimController extends Controller
 {
@@ -32,6 +33,18 @@ class TimController extends Controller
         return null;
     }
 
+    public function indexManager(Request $request)
+    {
+        $data = [
+            'title' => 'myTim',
+            'user' => User::where('role', 'manager')->get(),
+            'team' => Tim::with('user')->where('manager', Auth::user()->id)->first(),
+        ];
+        //dd($data);
+        return view('page.dashboard.manager.myTim', compact('data'));
+    }
+
+
     public function index(Request $request) 
     {
         if ($request->ajax()) {
@@ -42,15 +55,15 @@ class TimController extends Controller
                 if ($request->has('search')) {
                     $searchTerm = $request->input('search');
                     $query->where('nama_tim', 'like', "%$searchTerm%")
-                          ->orWhere('asal_institusi', 'like', "%$searchTerm%")
-                          ->orWhere('email', 'like', "%$searchTerm%")
-                          ->orWhere('alamat', 'like', "%$searchTerm%")
-                          ->orWhere('manager', 'like', "%$searchTerm%")
-                          ->orWhere('no_hp', 'like', "%$searchTerm%")
-                          ->orWhere('foto_tim', 'like', "%$searchTerm%")
-                          ->orWhere('surat_tugas', 'like', "%$searchTerm%")
-                          ->orWhere('created_at', 'like', "%$searchTerm%");
-                }
+                        ->orWhere('asal_institusi', 'like', "%$searchTerm%")
+                        ->orWhere('email', 'like', "%$searchTerm%")
+                        ->orWhere('alamat', 'like', "%$searchTerm%")
+                        ->orWhere('manager', 'like', "%$searchTerm%")
+                        ->orWhere('no_hp', 'like', "%$searchTerm%")
+                        ->orWhere('foto_tim', 'like', "%$searchTerm%")
+                        ->orWhere('surat_tugas', 'like', "%$searchTerm%")
+                        ->orWhere('created_at', 'like', "%$searchTerm%");
+            }
             
                 return response()->json($query->paginate($perPage));
             }
@@ -132,8 +145,8 @@ class TimController extends Controller
                     $searchTerm = $request->input('search');
                     $query->where(function($query) use ($searchTerm) {
                         $query->where('id_official', 'like', "%$searchTerm%")
-                              ->orWhere('id_atlet', 'like', "%$searchTerm%")
-                              ->orWhere('created_at', 'like', "%$searchTerm%");
+                            ->orWhere('id_atlet', 'like', "%$searchTerm%")
+                            ->orWhere('created_at', 'like', "%$searchTerm%");
                     });
                 }
                 

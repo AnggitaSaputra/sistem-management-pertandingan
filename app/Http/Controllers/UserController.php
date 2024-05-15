@@ -17,9 +17,9 @@ class UserController extends Controller
                 if ($request->has('search')) {
                     $searchTerm = $request->input('search');
                     $query->where('nama', 'like', "%$searchTerm%")
-                          ->orWhere('email', 'like', "%$searchTerm%")
-                          ->orWhere('role', 'like', "%$searchTerm%")
-                          ->orWhere('created_at', 'like', "%$searchTerm%");
+                        ->orWhere('email', 'like', "%$searchTerm%")
+                        ->orWhere('role', 'like', "%$searchTerm%")
+                        ->orWhere('created_at', 'like', "%$searchTerm%");
                 }
             
                 return response()->json($query->paginate($perPage));
