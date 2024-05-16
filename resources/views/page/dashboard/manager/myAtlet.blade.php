@@ -1,4 +1,4 @@
-@extends('layout.app')
+{{-- @extends('layout.app')
 
 @section('content')
 <div class="bg-white w-full h-fit p-5 shadow-lg rounded-lg">
@@ -98,3 +98,57 @@
     </table>
 </div>
 @endsection
+@section('script')
+
+<script> 
+// Mendapatkan elemen-elemen yang dibutuhkan
+const openModalButton = document.getElementById('openModalButton');
+const closeModalButton = document.getElementById('closeModalButton');
+const atletModal = document.getElementById('atletModal');
+const formAtlet = document.getElementById('formAtlet');
+
+// Fungsi untuk membuka modal
+function openModal() {
+    atletModal.classList.remove('hidden');
+}
+
+// Fungsi untuk menutup modal
+function closeModal() {
+    atletModal.classList.add('hidden');
+}
+
+// Menambahkan event listener untuk membuka modal saat tombol diklik
+openModalButton.addEventListener('click', openModal);
+// Menambahkan event listener untuk menutup modal saat tombol ditutup diklik
+closeModalButton.addEventListener('click', closeModal);
+
+// Fungsi untuk mengirim data atlet baru ke server
+
+function saveAtlet() {
+        const formData = new FormData(document.getElementById("formAtlet"));
+        const id = $('#id').val();
+        const url = id ? `http://127.0.0.1:8000/atlet/update/${id}` : '{{ route('atlet') }}';
+
+        const ajaxSettings = {
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert(response);
+                fetchData();
+                closeModal();
+                $('#formAtlet')[0].reset();
+                $('#passwordSection').show();
+            },
+            error: function(error) {
+                console.error('Error saving data:', error.responseText);
+            }
+        };
+
+        $.ajax(ajaxSettings);
+    }
+
+    </script>
+@endsection --}}

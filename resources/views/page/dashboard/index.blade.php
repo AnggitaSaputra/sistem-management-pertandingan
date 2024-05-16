@@ -45,21 +45,21 @@
     </div>
     @elseif (Auth::user()->role === 'manager')
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 text-black justify-center">
-        <a href="" class="min-w-lg p-6 bg-white shadow-xl rounded-lg flex justify-between px-20">
-            <svg class="w-32 h-32" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <a href="{{ route('my.Tim') }}" class="min-w-lg p-6 bg-white shadow-xl rounded-lg flex justify-between items-center px-20">
+            <svg class="w-32 h-32" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
             </svg>
             <div>
                 <h5 class="mb-2 text-2xl font-bold tracking-tight ">My Team</h5>
             </div>
         </a>  
-        <a href="" class="min-w-lg p-6 bg-white shadow-xl rounded-lg flex justify-between px-20">
-            <svg class="w-32 h-32" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <a href="{{ route('my.Atlet') }}" class="min-w-lg p-6 bg-white shadow-xl rounded-lg flex justify-between items-center px-20">
+            <svg class="w-32 h-32" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
             </svg>
             <div>
                 <h5 class="mb-2 text-2xl font-bold tracking-tight ">Total Atlet</h5>
-                <p class="text-2xl font-semibold">20</p>
+                <p class="text-2xl font-semibold">{{ $data['atlit'] }}</p>
             </div>
         </a>  
     </div>  
@@ -68,9 +68,9 @@
         <h1 class="font-semibold mb-5">Pemberitahuan</h1>
         <div class="grid grid-cols-1 gap-5 text-black justify-center">
             <div class="bg-blue-500 text-white shadow-md rounded-lg p-5 hover:bg-blue-600">
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center">
                     <p class="font-thin">
-                        Pertandingan akan dimulai dalam beberapa
+                        Pertandingan akan segera dimulai!
                     </p>
                     <a href="#">
                         &times;
@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="bg-yellow-500 text-white shadow-md rounded-lg p-5 hover:bg-yellow-600">
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center">
                     <p class="font-thin">
                         Anda belum melakukan pembayaran!
                     </p>
@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="bg-red-500 text-white shadow-md rounded-lg p-5 hover:bg-red-600">
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center">
                     <p class="font-thin">
                         Pembayaran telah lewat! silahkan ikuti pertandingan selanjutnya.
                     </p>
@@ -100,7 +100,6 @@
         </div>
     </div>
     @else
-    
     @endif
 </div>
 

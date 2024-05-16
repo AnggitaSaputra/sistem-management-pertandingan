@@ -45,6 +45,8 @@
                             <input type="file" name="logo" id="logo" class="mb-2">
                         </div>
                     </div>
+                    <div class="flex justify-end">
+                        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="editData()">Edit</button>
                 </div>              
             </div>
         </div>
