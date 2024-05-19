@@ -132,4 +132,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/myClasses', [KelasController::class, 'show'])->name('myClasses.show');
     Route::post('/myClasses', [KelasController::class, 'update'])->name('myClasses.update');
+
+    Route::post('/atlet', [AtletController::class, 'store'])->name('atlet.store');
+    Route::post('/atlet/update/{id}', [AtletController::class, 'update']);
+    Route::delete('/atlet/delete/{id}', [AtletController::class, 'destroy']);
+
 });

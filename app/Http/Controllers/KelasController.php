@@ -28,6 +28,17 @@ class KelasController extends Controller
             'classes' => Kelas::with('user')->where('nama_kelas', Auth::user()->id)->first(),
         ];
         return view('page.dashboard.manager.myClasses', compact('data'));
+
+        $data['classes'] = [
+            (object)[
+                'nama_kelas' => 'Individual Male Kata',
+                'kategori' => 'Kata',
+                'bb' => 'Your Athletes: 0',
+                'image_url' => 'public/assets/img/kumitePutra.jpeg',
+            ],
+            // tambahkan objek kelas lainnya
+        ];
+        
     }
     public function index(Request $request) 
     {

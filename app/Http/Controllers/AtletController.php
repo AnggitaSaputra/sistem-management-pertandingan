@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Atlet;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AtletController extends Controller
 {
@@ -49,6 +50,52 @@ class AtletController extends Controller
         return null;
     }
 
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required',
+            'ttl' => 'required',
+            'jenis_kelamin' => 'required',
+            'berat_badan' => 'required',
+            'foto' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+            'foto_ktp' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+            'ijazah_karate' => 'required|mimes:pdf,jpg,png,jpeg|max:2048'
+        ]);
+
+        $atlet = new Atlet();
+        $atlet->nama = $request->nama;
+        $atlet->ttl = $request->ttl;
+        $atlet->jenis_kelamin = $request->jenis_kelamin;
+        $atlet->berat_badan = $request->berat_badan;
+
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('public/fotos');
+            $atlet->foto = basename($fotoPath);
+        }
+
+        if ($request->hasFile('foto_ktp')) {
+            $fotoKtpPath = $request->file('foto_ktp')->store('public/foto_ktps');
+            $atlet->foto_ktp = basename($fotoKtpPath);
+        }
+
+        if ($request->hasFile('ijazah_karate')) {
+            $ijazahKaratePath = $request->file('ijazah_karate')->store('public/ijazah_karates');
+            $atlet->ijazah_karate = basename($ijazahKaratePath);
+        }
+
+        $atlet->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    
+    public function destroy($id)
+    {
+        $atlet = Atlet::findOrFail($id);
+        $atlet->delete();
+
+        return response()->json(['success' => true]);
+    }
     public function indexManager(Request $request)
     {
         $data = [
@@ -102,6 +149,7 @@ class AtletController extends Controller
         return view('page.dashboard.atlet', compact('data'));
     }
 
+    
     public function update(Request $request, $id)
     {
         if ($request->ajax()) {

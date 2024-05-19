@@ -35,10 +35,12 @@ class TimController extends Controller
 
     public function indexManager(Request $request)
     {
+        $manager =Auth::user();
         $data = [
             'title' => 'myTim',
             'user' => User::where('role', 'manager')->get(),
             'team' => Tim::with('user')->where('manager', Auth::user()->id)->first(),
+            'manager' => $manager,
         ];
         //dd($data);
         return view('page.dashboard.manager.myTim', compact('data'));

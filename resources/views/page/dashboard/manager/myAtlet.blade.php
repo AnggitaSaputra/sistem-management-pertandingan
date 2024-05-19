@@ -1,4 +1,4 @@
-{{-- @extends('layout.app')
+@extends('layout.app')
 
 @section('content')
 <div class="bg-white w-full h-fit p-5 shadow-lg rounded-lg">
@@ -21,19 +21,19 @@
     <div id="atletModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
         <div class="modal-content bg-white w-1/2 p-4 rounded-lg">
             <div class="flex justify-between">
-                <h2 class="text-xl font-bold">Tambah {{$data['title'] }}</h2>
+                <h2 class="text-xl font-bold" id="modalTitle">Tambah Atlet</h2>
                 <button id="closeModalButton" class="text-red-500 hover:text-red-700">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="formAtlet" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" id="id" name="id">
                     <div class="mb-6">
-                        <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Nama</label>
+                        <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Atlet</label>
                         <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama" required />
-                        <input type="id" id="id" name="id" hidden>
                     </div> 
                     <div class="mb-6">
-                        <label for="ttl" class="block mb-2 text-sm font-medium text-gray-900">Asal Institusi</label>
+                        <label for="ttl" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Lahir</label>
                         <input type="text" id="ttl" name="ttl" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan TTL" required />
                     </div> 
                     <div class="mb-6">
@@ -50,18 +50,18 @@
                     </div> 
                     <div class="mb-6">
                         <label class="block mb-2 text-sm font-medium text-gray-900">Foto Diri</label>
-                        <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-artikelnter bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="foto" id="foto" type="file" required>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="foto_atlet">.PNG , .JPG, .JPEG</p>
+                        <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="foto" id="foto" type="file" required>
+                        <p class="mt-1 text-sm text-gray-500" id="foto_atlet">.PNG , .JPG, .JPEG</p>
                     </div> 
                     <div class="mb-6">
                         <label class="block mb-2 text-sm font-medium text-gray-900">Foto KTP</label>
-                        <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-artikelnter bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="foto_ktp" id="foto_ktp" type="file" required>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="foto_atlet">.PNG , .JPG, .JPEG</p>
+                        <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="foto_ktp" id="foto_ktp" type="file" required>
+                        <p class="mt-1 text-sm text-gray-500" id="foto_atlet">.PNG , .JPG, .JPEG</p>
                     </div> 
                     <div class="mb-6">
                         <label class="block mb-2 text-sm font-medium text-gray-900">Ijazah Terakhir Karate</label>
-                        <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-artikelnter bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="ijazah_karate" id="ijazah_karate" type="file" required>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="surat_tugas">.PNG , .JPG, .JPEG, .PDF</p>
+                        <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="ijazah_karate" id="ijazah_karate" type="file" required>
+                        <p class="mt-1 text-sm text-gray-500" id="surat_tugas">.PNG , .JPG, .JPEG, .PDF</p>
                     </div> 
                     <button type="button" onclick="saveAtlet()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
                 </form>
@@ -83,14 +83,14 @@
             @foreach($data['atlet'] as $atlet)
             <tr>
                 <td class="px-6 py-4 whitespace-nowrap">{{ $data['atlet']->nama }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $data['atlet']->ttl }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $data['atlet']->jenis_kelamin }}</td>Z
-                <td class="px-6 py-4 whitespace-nowrap">{{ $data['atlet']->berat_badan }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $data['team']->ttl }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $data['team']->jenis_kelamin }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $data['team']->berat_badan }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-900" onclick="editAtlet({{ $data['team'] }})">Edit</a>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="#" class="text-red-600 hover:text-red-900">Delete</a>
+                    <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteAtlet({{ $data['team']->id }})">Delete</a>
                 </td>
             </tr>
             @endforeach
@@ -98,8 +98,8 @@
     </table>
 </div>
 @endsection
-@section('script')
 
+@section('script')
 <script> 
 // Mendapatkan elemen-elemen yang dibutuhkan
 const openModalButton = document.getElementById('openModalButton');
@@ -109,6 +109,9 @@ const formAtlet = document.getElementById('formAtlet');
 
 // Fungsi untuk membuka modal
 function openModal() {
+    document.getElementById('modalTitle').innerText = 'Tambah Atlet';
+    document.getElementById('formAtlet').reset();
+    document.getElementById('id').value = '';
     atletModal.classList.remove('hidden');
 }
 
@@ -122,33 +125,71 @@ openModalButton.addEventListener('click', openModal);
 // Menambahkan event listener untuk menutup modal saat tombol ditutup diklik
 closeModalButton.addEventListener('click', closeModal);
 
-// Fungsi untuk mengirim data atlet baru ke server
-
+// Fungsi untuk mengirim data atlet baru atau memperbarui data atlet
 function saveAtlet() {
-        const formData = new FormData(document.getElementById("formAtlet"));
-        const id = $('#id').val();
-        const url = id ? `http://127.0.0.1:8000/atlet/update/${id}` : '{{ route('atlet') }}';
+    const formData = new FormData(document.getElementById("formAtlet"));
+    const id = document.getElementById('id').value;
+    const url = id ? `http://127.0.0.1:8000/atlet/update/${id}` : '{{ route('atlet.store') }}';
 
-        const ajaxSettings = {
-            url: url,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert(response);
-                fetchData();
-                closeModal();
-                $('#formAtlet')[0].reset();
-                $('#passwordSection').show();
-            },
-            error: function(error) {
-                console.error('Error saving data:', error.responseText);
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Data berhasil disimpan');
+            closeModal();
+            location.reload();
+        } else {
+            alert('Terjadi kesalahan');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving data:', error);
+    });
+}
+
+// Fungsi untuk mengedit data atlet
+function editAtlet(atlet) {
+    document.getElementById('modalTitle').innerText = 'Edit Atlet';
+    document.getElementById('id').value = atlet.id;
+    document.getElementById('nama').value = atlet.nama;
+    document.getElementById('ttl').value = atlet.ttl;
+    document.getElementById('jenis_kelamin').value = atlet.jenis_kelamin;
+    document.getElementById('berat_badan').value = atlet.berat_badan;
+    // Ensure that file inputs are cleared when editing
+    document.getElementById('foto').value = '';
+    document.getElementById('foto_ktp').value = '';
+    document.getElementById('ijazah_karate').value = '';
+    openModal();
+}
+
+// Fungsi untuk menghapus data atlet
+function deleteAtlet(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+        fetch(`http://127.0.0.1:8000/atlet/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
-        };
-
-        $.ajax(ajaxSettings);
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Data berhasil dihapus');
+                location.reload();
+            } else {
+                alert('Terjadi kesalahan');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting data:', error);
+        });
     }
-
-    </script>
-@endsection --}}
+}
+</script>
+@endsection

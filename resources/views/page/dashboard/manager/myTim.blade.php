@@ -24,6 +24,10 @@
                         <label for="email" class="block text-lg font-medium text-gray-700">Email</label>
                         <input type="email" name="email" id="email" class="mt-1 block w-full" value="{{ $data['team']->email }}">
                     </div>
+                    <div class="mb-4">
+                        <label for="manager" class="block text-lg font-medium text-gray-700">Manager</label>
+                        <input type="text" id="manager" class="mt-1 block w-full" value="{{ $data['team']->name }}" disabled>
+                    </div>
                 </div>
             </div>
             <div class="col-span-1 flex flex-col mt-10">
@@ -46,20 +50,81 @@
                         </div>
                     </div>
                     <div class="flex justify-end">
-                        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="editData()">Edit</button>
-                </div>              
+                        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="openEditModal()">Edit</button>
+                    </div>              
+                </div>
             </div>
         </div>
     </form>
 </div>
 
+<!-- Edit Modal -->
+<div id="editModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-50 flex justify-center items-center">
+    <div class="modal-content bg-white w-1/2 p-4 rounded-lg">
+        <div class="flex justify-between">
+            <h2 class="text-xl font-bold">Edit Team</h2>
+            <button id="closeEditModalButton" class="text-red-500 hover:text-red-700">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editTeamForm" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" id="edit_team_id">
+                <div class="mb-6">
+                    <label for="edit_nama_tim" class="block mb-2 text-sm font-medium text-gray-900">Nama Tim</label>
+                    <input type="text" id="edit_nama_tim" name="edit_nama_tim" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                </div> 
+                <div class="mb-6">
+                    <label for="edit_asal_institusi" class="block mb-2 text-sm font-medium text-gray-900">Asal Institusi</label>
+                    <input type="text" id="edit_asal_institusi" name="edit_asal_institusi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                </div> 
+                <div class="mb-6">
+                    <label for="edit_alamat" class="block mb-2 text-sm font-medium text-gray-900">Alamat</label>
+                    <input type="text" id="edit_alamat" name="edit_alamat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                </div> 
+                <div class="mb-6">
+                    <label for="edit_email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                    <input type="email" id="edit_email" name="edit_email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                </div> 
+                <div class="mb-6">
+                    <label for="edit_email" class="block mb-2 text-sm font-medium text-gray-900">Manager</label>
+                    <input type="email" id="edit_email" name="edit_email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                </div> 
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-900">Surat Tugas</label>
+                    <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="edit_surat_tugas" id="edit_surat_tugas" type="file">
+                    <p class="mt-1 text-sm text-gray-500" id="edit_surat_tugas_help">.PNG, .JPG, .JPEG, .PDF</p>
+                </div> 
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-900">Logo</label>
+                    <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="edit_logo" id="edit_logo" type="file">
+                    <p class="mt-1 text-sm text-gray-500" id="edit_logo_help">.PNG, .JPG, .JPEG</p>
+                </div> 
+                <button type="button" onclick="saveEditData()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
-    function editData() {
-        document.getElementById('teamForm').submit();
+    // Function to open edit modal
+    function openEditModal() {
+        document.getElementById('editModal').classList.remove('hidden');
+        
+        // Populate form fields with existing data
+        document.getElementById('edit_nama_tim').value = "{{ $data['team']->nama_tim }}";
+        document.getElementById('edit_asal_institusi').value = "{{ $data['team']->asal_institusi }}";
+        document.getElementById('edit_alamat').value = "{{ $data['team']->alamat }}";
+        document.getElementById('edit_email').value = "{{ $data['team']->email }}";
     }
 
-    function saveData() {
-        document.getElementById('teamForm').submit();
+    // Function to close edit modal
+    document.getElementById('closeEditModalButton').addEventListener('click', function() {
+        document.getElementById('editModal').classList.add('hidden');
+    });
+
+    // Function to save edit data
+    function saveEditData() {
+        document.getElementById('editTeamForm').submit();
     }
 </script>
 @endsection
