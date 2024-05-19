@@ -54,8 +54,9 @@ class AtletController extends Controller
         $data = [
             'title' => 'myAtlet',
             'user' => User::where('role', 'manager')->get(),
+            'atlet' => Atlet::with('user')->where('nama', Auth::user()->id)->get(),    
         ];
-        return view('page.dashboard.manager.myAthlet', compact('data'));
+        return view('page.dashboard.manager.myAtlet', compact('data'));
     }
     public function index(Request $request) 
     {
