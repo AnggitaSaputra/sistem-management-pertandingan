@@ -125,11 +125,14 @@ Route::middleware(['auth'])->group(function () {
         Route::match(['GET', 'POST'], '/notifikasi', 'index')->name('notifikasi');
     });
 
-    Route::get('/myTim', [TimController::class, 'show'])->name('myTim.show');
-    Route::post('/myTim', [TimController::class, 'update'])->name('myTim.update');
-    Route::post('/myTim/upload-logo', [TimController::class, 'uploadLogo'])->name('myTim.uploadLogo');
-    Route::post('/myTim/upload-surat-tugas', [TimController::class, 'uploadSuratTugas'])->name('myTim.uploadSuratTugas');
+    Route::prefix('myTim')->group(function () {
+        Route::controller(TimController::class)->group(function() {
+            Route::get('/','show')->name('myTim.show');
 
+            
+        
+        });
+    });
     Route::get('/myClasses', [KelasController::class, 'show'])->name('myClasses.show');
     Route::post('/myClasses', [KelasController::class, 'update'])->name('myClasses.update');
 

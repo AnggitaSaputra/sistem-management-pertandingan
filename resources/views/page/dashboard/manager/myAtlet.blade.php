@@ -4,14 +4,6 @@
 <div class="bg-white w-full h-fit p-5 shadow-lg rounded-lg">
     <h1 class="text-l font-semibold mb-4">Daftar Atlet</h1>
     <div class="pb-4 bg-white flex justify-between">
-        <div class="relative mt-1">
-            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-            <input type="text" id="search" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for items">
-        </div>
         <div>
             <button id="openModalButton" class="bg-blue-700 hover:bg-blue-500 text-white p-2 rounded-lg">
                 Tambah Data
@@ -68,7 +60,7 @@
             </div>
         </div>
     </div>
-    <table class="min-w-full divide-y divide-gray-200">
+    <table class="min-w-full divide-y divide-gray-200" id="table">
         <thead class="bg-gray-50">
             <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
@@ -82,15 +74,15 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach($data['atlet'] as $atlet)
             <tr>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $data['atlet']->nama }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $data['team']->ttl }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $data['team']->jenis_kelamin }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $data['team']->berat_badan }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $atlet->atlet->nama }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $atlet->atlet->ttl }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $atlet->atlet->jenis_kelamin }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $atlet->atlet->berat_badan }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="#" class="text-indigo-600 hover:text-indigo-900" onclick="editAtlet({{ $data['team'] }})">Edit</a>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-900" onclick="editAtlet({{ $atlet->atlet->id }})">Edit</a>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteAtlet({{ $data['team']->id }})">Delete</a>
+                    <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteAtlet({{ $atlet->atlet->id }})">Delete</a>
                 </td>
             </tr>
             @endforeach
@@ -101,6 +93,11 @@
 
 @section('script')
 <script> 
+
+$(document).ready( function () {
+    $('#table').DataTable();
+} );
+
 // Mendapatkan elemen-elemen yang dibutuhkan
 const openModalButton = document.getElementById('openModalButton');
 const closeModalButton = document.getElementById('closeModalButton');

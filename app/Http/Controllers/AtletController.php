@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Atlet;
+use App\Models\Tim;
+use App\Models\TimListUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -98,11 +100,34 @@ class AtletController extends Controller
     }
     public function indexManager(Request $request)
     {
+        $findTeam = Tim::where('manager', Auth::user()->id)->first();
+        if ($request->isMethod('post')) {
+            $foto = $this->handleFotoUpload($request);
+            $foto_ktp = $this->handleFotoKTPUpload($request);
+            $ijazah_karate = $this->handleIjazahKarateUpload($request);
+    
+            $atlet = Atlet::create([
+                'nama'=> $request->nama,
+                'ttl'=> $request->ttl,
+                'jenis_kelamin'=> $request->jenis_kelamin,
+                'berat_badan'=> $request->berat_badan,
+                'foto'=> $foto,
+                'foto_ktp'=> $foto_ktp,
+                'ijazah_karate'=> $ijazah_karate,
+            ]);
+            TimListUser::create([
+                'id_atlet' => $atlet->id,
+                'id_tim' => $findTeam->id,
+                'id_official' => null,
+            ]);
+        }
+
         $data = [
             'title' => 'myAtlet',
             'user' => User::where('role', 'manager')->get(),
-            'atlet' => Atlet::with('user')->where('nama', Auth::user()->id)->get(),    
+            'atlet' => TimListUser::with('user', 'atlet','tim')->where('id_tim', $findTeam->id)->where('id_official !=', null )->get(),    
         ];
+        dd($data);
         return view('page.dashboard.manager.myAtlet', compact('data'));
     }
     public function index(Request $request) 
