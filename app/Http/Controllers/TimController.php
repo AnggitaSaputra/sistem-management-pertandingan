@@ -42,7 +42,7 @@ class TimController extends Controller
             'team' => Tim::with('user')->where('manager', Auth::user()->id)->first(),
             'manager' => $manager,
         ];
-        //dd($data);
+        // dd($data);
         return view('page.dashboard.manager.myTim', compact('data'));
     }
 

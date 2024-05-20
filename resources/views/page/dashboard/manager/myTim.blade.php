@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="bg-white w-full h-fit p-5 shadow-lg rounded-lg">
-    <form id="teamForm" action="{{ route('myTim.update') }}" method="POST" enctype="multipart/form-data">
+    <form id="teamForm" action="" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-3 gap-4">
             <div class="col-span-2">
@@ -10,23 +10,23 @@
                 <div class="grid grid-cols-1 gap-4 bg-gray-200 p-4 rounded-lg">
                     <div class="mb-4">
                         <label for="name" class="block text-lg font-medium text-gray-700">Nama</label>
-                        <input type="text" name="nama_tim" id="name" class="mt-1 block w-full" value="{{ $data['team']->nama_tim }}">
+                        <input type="text" name="nama_tim" id="name" class="mt-1 block w-full" value="{{ $data['team']?->nama_tim }}">
                     </div>
                     <div class="mb-4">
                         <label for="school" class="block text-lg font-medium text-gray-700">Asal Sekolah</label>
-                        <input type="text" name="asal_institusi" id="school" class="mt-1 block w-full" value="{{ $data['team']->asal_institusi }}">
+                        <input type="text" name="asal_institusi" id="school" class="mt-1 block w-full" value="{{ $data['team']?->asal_institusi }}">
                     </div>
                     <div class="mb-4">
                         <label for="address" class="block text-lg font-medium text-gray-700">Alamat</label>
-                        <input type="text" name="alamat" id="address" class="mt-1 block w-full" value="{{ $data['team']->alamat }}">
+                        <input type="text" name="alamat" id="address" class="mt-1 block w-full" value="{{ $data['team']?->alamat }}">
                     </div>
                     <div class="mb-4">
                         <label for="email" class="block text-lg font-medium text-gray-700">Email</label>
-                        <input type="email" name="email" id="email" class="mt-1 block w-full" value="{{ $data['team']->email }}">
+                        <input type="email" name="email" id="email" class="mt-1 block w-full" value="{{ $data['team']?->email }}">
                     </div>
                     <div class="mb-4">
                         <label for="manager" class="block text-lg font-medium text-gray-700">Manager</label>
-                        <input type="text" id="manager" class="mt-1 block w-full" value="{{ $data['team']->name }}" disabled>
+                        <input type="text" id="manager" class="mt-1 block w-full" value="{{ $data['team']?->name }}" disabled>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                     <div class="p-4 rounded-lg flex flex-col items-start">
                         <h2 class="text-lg font-semibold mb-4">Logo</h2>
                         <div class="w-full">
-                            <img src="{{ $data['team']->foto_tim ? asset('uploads/' . $data['team']->foto_tim) : 'https://via.placeholder.com/150' }}" alt="Logo Tim" class="w-full h-auto rounded-lg">
+                            <img src="{{ $data['team']?->foto_tim ? asset('uploads/' . $data['team']?->foto_tim) : 'https://via.placeholder.com/150' }}" alt="Logo Tim" class="w-full h-auto rounded-lg">
                         </div>
                         <div class="flex flex-col items-center mb-2">
                             <input type="file" name="logo" id="logo" class="mb-2">
@@ -106,25 +106,5 @@
 </div>
 
 <script>
-    // Function to open edit modal
-    function openEditModal() {
-        document.getElementById('editModal').classList.remove('hidden');
-        
-        // Populate form fields with existing data
-        document.getElementById('edit_nama_tim').value = "{{ $data['team']->nama_tim }}";
-        document.getElementById('edit_asal_institusi').value = "{{ $data['team']->asal_institusi }}";
-        document.getElementById('edit_alamat').value = "{{ $data['team']->alamat }}";
-        document.getElementById('edit_email').value = "{{ $data['team']->email }}";
-    }
-
-    // Function to close edit modal
-    document.getElementById('closeEditModalButton').addEventListener('click', function() {
-        document.getElementById('editModal').classList.add('hidden');
-    });
-
-    // Function to save edit data
-    function saveEditData() {
-        document.getElementById('editTeamForm').submit();
-    }
 </script>
 @endsection

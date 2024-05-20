@@ -26,7 +26,7 @@
                     </div> 
                     <div class="mb-6">
                         <label for="ttl" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Lahir</label>
-                        <input type="text" id="ttl" name="ttl" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan TTL" required />
+                        <input type="date" id="ttl" name="ttl" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan TTL" required />
                     </div> 
                     <div class="mb-6">
                         <label for="jenis_kelamin" class="block mb-2 text-sm font-medium text-gray-900">Jenis Kelamin</label>
@@ -72,6 +72,7 @@
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
+            @if (!empty($data['atlet']))
             @foreach($data['atlet'] as $atlet)
             <tr>
                 <td class="px-6 py-4 whitespace-nowrap">{{ $atlet->atlet->nama }}</td>
@@ -86,6 +87,7 @@
                 </td>
             </tr>
             @endforeach
+            @endif
         </tbody>
     </table>
 </div>

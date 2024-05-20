@@ -122,12 +122,13 @@ class AtletController extends Controller
             ]);
         }
 
+        // menampilkan data atlet user
         $data = [
             'title' => 'myAtlet',
             'user' => User::where('role', 'manager')->get(),
-            'atlet' => TimListUser::with('user', 'atlet','tim')->where('id_tim', $findTeam->id)->where('id_official !=', null )->get(),    
+            'atlet' => $findTeam===null ? null : TimListUser::with('user', 'atlet','tim')->where('id_tim', $findTeam->id)->where('id_official', null )->get(),    
         ];
-        dd($data);
+        // dd($data);
         return view('page.dashboard.manager.myAtlet', compact('data'));
     }
     public function index(Request $request) 

@@ -128,16 +128,22 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('myTim')->group(function () {
         Route::controller(TimController::class)->group(function() {
             Route::get('/','show')->name('myTim.show');
-
-            
-        
         });
     });
-    Route::get('/myClasses', [KelasController::class, 'show'])->name('myClasses.show');
-    Route::post('/myClasses', [KelasController::class, 'update'])->name('myClasses.update');
 
-    Route::post('/atlet', [AtletController::class, 'store'])->name('atlet.store');
-    Route::post('/atlet/update/{id}', [AtletController::class, 'update']);
-    Route::delete('/atlet/delete/{id}', [AtletController::class, 'destroy']);
+    Route::prefix('myClasses')->group(function () {
+        Route::controller(KelasController::class)->group(function() {
+            Route::get('/','show')->name('myClasses.show');
+            Route::post('/','update')->name('myClasses.update');
+        });
+    });
+
+    Route::prefix('atlet')->group(function () {
+        Route::controller(AtletController::class)->group(function() {
+            Route::post('/', 'store')->name('atlet.store');
+            Route::post('/update/{id}', 'update');
+            Route::delete('/delete/{id}', 'destroy');
+        });
+    });
 
 });

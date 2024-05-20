@@ -32,13 +32,13 @@
                     <form id="formAtlet" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-6">
-                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Nama</label>
+                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Atlet</label>
                             <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Nama" required />
                             <input type="id" id="id" name="id" hidden>
                         </div> 
                         <div class="mb-6">
-                            <label for="ttl" class="block mb-2 text-sm font-medium text-gray-900">Asal Institusi</label>
-                            <input type="text" id="ttl" name="ttl" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan TTL" required />
+                            <label for="ttl" class="block mb-2 text-sm font-medium text-gray-900">Tempat Tanggal Lahir</label>
+                            <input type="date" id="ttl" name="ttl" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan TTL" required />
                         </div> 
                         <div class="mb-6">
                             <label for="jenis_kelamin" class="block mb-2 text-sm font-medium text-gray-900">Jenis Kelamin</label>
@@ -52,7 +52,7 @@
                             <label for="berat_badan" class="block mb-2 text-sm font-medium text-gray-900">Berat Badan</label>
                             <input type="number" id="berat_badan" name="berat_badan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukan Berat Badan" required>
                         </div> 
-                        <div class="mb-6">
+                        <div class="mb-6">  
                             <label class="block mb-2 text-sm font-medium text-gray-900">Foto Diri</label>
                             <input class="block w-full text-sm border border-gray-300 rounded-lg cursor-artikelnter bg-gray-50 text-gray-400 focus:outline-none placeholder-gray-400" aria-describedby="file_input_help" name="foto" id="foto" type="file" required>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="foto_atlet">.PNG , .JPG, .JPEG</p>
@@ -233,7 +233,7 @@
             row.append($('<td>').addClass('px-6 py-4').text(atlet.ijazah_karate));
             row.append($('<td>').addClass('px-6 py-4').text(formattedDate));  
             var editButton = $('<button>')
-                .addClass('font-medium text-blue-600 hover:underline edit-button mr-2')
+                .addClass('text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800')
                 .text('Edit')
                 .attr('id', 'editButton_' + atlet.id)
                 .click(function() {
@@ -241,7 +241,7 @@
                 });
             
             var deleteButton = $('<button>')
-                .addClass('font-medium text-red-600 hover:underline delete-button')
+                .addClass('focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900')
                 .text('Delete')
                 .attr('id', 'deleteButton_' + atlet.id)
                 .click(function() {
